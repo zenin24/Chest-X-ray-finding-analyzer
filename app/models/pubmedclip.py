@@ -71,8 +71,13 @@ class PubMedCLIPModel:
         self._device = _resolve_device()
 
         try:
-            self._processor = CLIPProcessor.from_pretrained(model_name)
-            self._model = CLIPModel.from_pretrained(model_name)
+            try:
+                self._processor = CLIPProcessor.from_pretrained(model_name, local_files_only=True)
+                self._model = CLIPModel.from_pretrained(model_name, local_files_only=True)
+            except Exception:
+                logger.info("Local files not found or incomplete, fetching from HuggingFace Hub...")
+                self._processor = CLIPProcessor.from_pretrained(model_name)
+                self._model = CLIPModel.from_pretrained(model_name)
             self._model.to(self._device)
             self._model.eval()
             self._loaded = True

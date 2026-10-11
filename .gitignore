@@ -36,3 +36,6 @@ data/processed/*
 .coverage
 htmlcov/
 
+# Archives
+*.zip
+

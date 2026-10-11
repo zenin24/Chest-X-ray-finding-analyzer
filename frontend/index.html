@@ -3,482 +3,831 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RAD·LAB — Chest X-ray Finding Analyzer</title>
-  <!-- Google Fonts: Inter, Instrument Serif, JetBrains Mono -->
+  <meta name="description" content="RAD·LAB Chest X-ray Finding Analyzer — Clinical Decision Support & Medical Vision-Language Zero-Shot Intelligence Console powered by PubMedCLIP.">
+  <title>Chest X-ray Finding Analyzer — RAD·LAB Research Console</title>
+  
+  <!-- Premium Medical Typography: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <!-- Main Workspace Shell -->
-  <div class="rad-shell">
-    
-    <!-- Left Navigation Sidebar -->
-    <aside class="rad-sidebar">
-      <!-- Brand Logo -->
-      <div class="sidebar-brand">
-        <div class="brand-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+<body class="clinical-body">
+
+  <!-- Application Shell with Compact Left Sidebar & Main Workspace -->
+  <div class="app-layout-shell" id="appLayoutShell">
+
+    <!-- Compact Sidebar Navigation Rail -->
+    <aside class="clinical-sidebar" id="clinicalSidebar" aria-label="Laboratory Workspace Navigation">
+      <!-- Sidebar Brand Header -->
+      <div class="sidebar-header">
+        <div class="brand-beacon" title="RAD·LAB Medical Vision Intelligence">
+          <svg class="beacon-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
             <path d="M12 9v4"/>
             <path d="M10 11h4"/>
           </svg>
+          <span class="beacon-pulse-ring"></span>
         </div>
-        <div class="brand-text">
-          <span class="brand-name">RAD · LAB</span>
-          <span class="brand-sub">RESEARCH CONSOLE</span>
+        <div class="sidebar-brand-text">
+          <span class="brand-name-sup">RAD·LAB</span>
+          <span class="brand-name-sub">Research Console</span>
         </div>
+        <button class="btn-sidebar-toggle" id="btnSidebarToggle" aria-label="Toggle compact sidebar" title="Toggle Sidebar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
       </div>
 
-      <!-- Navigation Sections -->
-      <nav class="sidebar-nav">
-        <div class="nav-group">
-          <div class="nav-label">WORKSPACE</div>
-          <button class="nav-item active" id="navOverview">
-            <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect width="7" height="7" x="3" y="3" rx="1"/>
-              <rect width="7" height="7" x="14" y="3" rx="1"/>
-              <rect width="7" height="7" x="14" y="14" rx="1"/>
-              <rect width="7" height="7" x="3" y="14" rx="1"/>
-            </svg>
-            <span>Overview</span>
-          </button>
-          <button class="nav-item" id="navNewAnalysis">
-            <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="22" x2="18" y1="12" y2="12"/>
-              <line x1="6" x2="2" y1="12" y2="12"/>
-              <line x1="12" x2="12" y1="6" y2="2"/>
-              <line x1="12" x2="12" y1="22" y2="18"/>
-            </svg>
-            <span>New analysis</span>
-          </button>
-          <button class="nav-item" id="navHistory">
-            <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
-            </svg>
-            <span>History</span>
-            <span class="nav-badge" id="historyCountBadge">17</span>
-          </button>
-        </div>
+      <!-- Navigation Item Groups -->
+      <nav class="sidebar-nav" aria-label="Primary Console Navigation">
+        <div class="nav-section-label">WORKSTATION</div>
+        <a href="#viewportSection" class="sidebar-nav-item active" id="navItemConsole" title="Live Analysis Console">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+          <span class="nav-label">Live Console</span>
+          <span class="nav-live-dot" aria-hidden="true"></span>
+        </a>
 
-        <div class="nav-group">
-          <div class="nav-label">MODEL</div>
-          <div class="model-widget-card" id="modelWidget">
-            <div class="model-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 2a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93L12 14v4l-2 2-2-2v-4l-.75-4.07A4 4 0 0 1 12 2Z"/>
-                <path d="M18 10a4 4 0 0 1 4 4c0 1.95-1.4 3.58-3.25 3.93"/>
-                <path d="M6 10a4 4 0 0 0-4 4c0 1.95 1.4 3.58 3.25 3.93"/>
-              </svg>
-            </div>
-            <div class="model-info">
-              <div class="model-title" id="sidebarModelTitle">PubMedCLIP</div>
-              <div class="model-meta">ViT-B/32 · v1.0.4</div>
-            </div>
-            <div class="status-indicator-dot online" title="Model Loaded on CPU"></div>
-          </div>
-        </div>
+        <a href="#casePresetButtons" class="sidebar-nav-item" id="navItemCases" title="Evaluation Presets">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span class="nav-label">Sample Cases</span>
+        </a>
 
-        <div class="nav-group">
-          <div class="nav-label">RESOURCES</div>
-          <button class="nav-item" id="navPromptLibrary">
-            <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
-              <path d="M6 6h10"/>
-              <path d="M6 10h10"/>
-            </svg>
-            <span>Prompt library</span>
-          </button>
-          <button class="nav-item" id="navEvaluation">
-            <svg class="nav-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" x2="18" y1="20" y2="10"/>
-              <line x1="12" x2="12" y1="20" y2="4"/>
-              <line x1="6" x2="6" y1="20" y2="14"/>
-            </svg>
-            <span>Evaluation</span>
-          </button>
-        </div>
+        <a href="#findingsSection" class="sidebar-nav-item" id="navItemFindings" title="Findings Matrix">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"/>
+            <line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+          <span class="nav-label">Findings Matrix</span>
+        </a>
+
+        <a href="#explainabilityCard" class="sidebar-nav-item" id="navItemHeatmap" title="Spatial 7×7 Heatmap">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="18" height="18" x="3" y="3" rx="2"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="3" y1="15" x2="21" y2="15"/>
+            <line x1="9" y1="3" x2="9" y2="21"/>
+            <line x1="15" y1="3" x2="15" y2="21"/>
+          </svg>
+          <span class="nav-label">7×7 Heatmap</span>
+        </a>
+
+        <a href="#calibrationSection" class="sidebar-nav-item" id="navItemCalibration" title="Threshold Calibration">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+            <polyline points="2 17 12 22 22 17"/>
+            <polyline points="2 12 12 17 22 12"/>
+          </svg>
+          <span class="nav-label">Calibration</span>
+        </a>
+
+        <div class="nav-section-label">INTELLIGENCE</div>
+        <button class="sidebar-nav-btn" id="sidebarPromptBtn" title="Zero-Shot Medical Prompt Library">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+            <line x1="8" y1="6" x2="16" y2="6"/>
+            <line x1="8" y1="10" x2="16" y2="10"/>
+          </svg>
+          <span class="nav-label">Prompt Bank</span>
+        </button>
+
+        <button class="sidebar-nav-btn" id="sidebarReportBtn" title="Structured Impression Report">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+          <span class="nav-label">Impression Report</span>
+        </button>
+
+        <button class="sidebar-nav-btn" id="sidebarGuidanceBtn" title="Clinical Guidance & Regulatory Compliance">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span class="nav-label">Safety & CDS</span>
+        </button>
       </nav>
 
-      <!-- Sidebar Footer -->
-      <div class="sidebar-footer">
-        <div class="system-status">
-          <span class="system-pulse"></span>
-          <span class="system-text">System operational</span>
+      <!-- Sidebar Footer Telemetry Widget -->
+      <div class="sidebar-telemetry-widget" id="sidebarTelemetryWidget">
+        <div class="telemetry-item">
+          <div class="telemetry-header">
+            <span class="tel-label">AI ENGINE</span>
+            <span class="tel-status-pill online">
+              <span class="tel-dot"></span>
+              <span id="sidebarEngineStatus">Online</span>
+            </span>
+          </div>
+          <span class="tel-val" id="sidebarModelTag">PubMedCLIP ViT-B/32</span>
         </div>
-        <button class="settings-btn" id="navSettings">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-            <circle cx="12" cy="12" r="3"/>
-          </svg>
-          <span>Settings</span>
-        </button>
+        <div class="telemetry-divider"></div>
+        <div class="telemetry-row">
+          <div class="telemetry-metric">
+            <span class="tel-sub">DEVICE</span>
+            <span class="tel-sub-val" id="sidebarDeviceTag">CPU</span>
+          </div>
+          <div class="telemetry-metric">
+            <span class="tel-sub">LATENCY</span>
+            <span class="tel-sub-val" id="sidebarLatencyTag">&lt;50ms</span>
+          </div>
+        </div>
       </div>
     </aside>
 
-    <!-- Main Content Viewport -->
-    <div class="rad-main-content">
-      
-      <!-- Top Header Bar -->
-      <header class="rad-topbar">
-        <div class="breadcrumb">
-          <span class="crumb-root">Workspace</span>
-          <span class="crumb-sep">/</span>
-          <span class="crumb-active">Overview</span>
-        </div>
-        <div class="topbar-actions">
-          <div class="api-status-chip">
-            <span class="api-dot"></span>
-            <span>API connected</span>
+    <!-- Main Application Viewport Shell -->
+    <div class="workstation-viewport-shell">
+
+      <!-- Top Clinical PACS Workstation Header -->
+      <header class="clinical-topbar" id="clinicalTopbar">
+        <div class="topbar-left">
+          <button class="mobile-sidebar-toggle" id="btnMobileSidebarToggle" aria-label="Open mobile navigation menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+
+          <div class="clinical-brand">
+            <div class="brand-badge-icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                <path d="M12 9v4"/>
+                <path d="M10 11h4"/>
+              </svg>
+            </div>
+            <div class="brand-details">
+              <div class="brand-title-row">
+                <h1 class="brand-title">Chest X-ray Finding Analyzer</h1>
+                <span class="clinical-badge-tag">RAD·LAB CONSOLE</span>
+              </div>
+              <span class="brand-subtext">PubMedCLIP Multimodal Zero-Shot Finding Attribution</span>
+            </div>
           </div>
-          <button class="icon-btn" title="Notifications" id="btnNotifications">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
-              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+        </div>
+
+        <!-- Active Study Clinical Context Ribbon -->
+        <div class="study-context-ribbon">
+          <div class="context-item">
+            <span class="ctx-label">STUDY ID</span>
+            <span class="ctx-val" id="displayStudyId">CXR-2026-8492</span>
+          </div>
+          <div class="context-divider"></div>
+          <div class="context-item">
+            <span class="ctx-label">MODALITY</span>
+            <span class="ctx-val">DX / CR Frontal</span>
+          </div>
+          <div class="context-divider"></div>
+          <div class="context-item">
+            <span class="ctx-label">AI ENGINE</span>
+            <span class="ctx-val" id="topbarModelName">PubMedCLIP ViT-B/32</span>
+          </div>
+          <div class="context-divider"></div>
+          <div class="context-item">
+            <span class="ctx-label">SYSTEM</span>
+            <span class="ctx-status-online" id="topbarSystemStatus">
+              <span class="status-ping-dot"></span>
+              <span>Online (CPU)</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Topbar Actions -->
+        <div class="topbar-actions">
+          <button class="btn-topbar-secondary" id="btnThemeToggle" title="Toggle Clinical Light / Dark Reading Room Mode" aria-label="Toggle theme mode">
+            <svg class="theme-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2"/>
+              <path d="M12 20v2"/>
+              <path d="m4.93 4.93 1.41 1.41"/>
+              <path d="m17.66 17.66 1.41 1.41"/>
+              <path d="M2 12h2"/>
+              <path d="M20 12h2"/>
+              <path d="m6.34 17.66-1.41 1.41"/>
+              <path d="m19.07 4.93-1.41 1.41"/>
             </svg>
+            <span id="themeToggleLabel">Reading Mode</span>
           </button>
-          <button class="icon-btn" title="Documentation & Help" id="btnHelp">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-              <line x1="12" x2="12.01" y1="17" y2="17"/>
+
+          <button class="btn-topbar-secondary" id="btnOpenReportModal" title="Generate and export structured clinical impression report">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
             </svg>
-            <span class="btn-label">Help</span>
+            <span>Structured Report</span>
           </button>
-          <button class="action-btn-primary" id="btnTopNewAnalysis">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/>
+
+          <button class="btn-topbar-secondary" id="navPromptLibrary" title="Controlled clinical prompt library">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+              <line x1="8" y1="6" x2="16" y2="6"/>
+              <line x1="8" y1="10" x2="16" y2="10"/>
             </svg>
-            <span>New analysis</span>
+            <span>Prompt Library</span>
+          </button>
+
+          <button class="btn-topbar-primary" id="btnTopNewAnalysis" title="Upload new radiograph for analysis">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            <span>New Study</span>
           </button>
         </div>
       </header>
 
-      <!-- Scrollable Dashboard Body -->
-      <div class="dashboard-scroll">
-        
-        <!-- Hero Header -->
-        <section class="hero-section">
-          <div class="hero-left">
-            <div class="hero-eyebrow">
-              <span class="eyebrow-dash">—</span>
-              <span class="eyebrow-text">RESEARCH WORKSPACE · 15 SEP 2026</span>
-            </div>
-            <h1 class="hero-title">
-              Chest X-ray <span class="title-accent">finding</span> analyzer
-            </h1>
-            <p class="hero-subtitle">
-              Explore image-text similarity with PubMedCLIP and surface candidate findings with spatial context.
-            </p>
+      <!-- Prominent Clinical Decision Support Safety Banner -->
+      <div class="clinical-safety-alert" role="alert" id="safetyAlertBar">
+        <div class="safety-alert-content">
+          <div class="safety-icon-wrap">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
           </div>
-          <div class="hero-right">
-            <div class="research-badge-card">
-              <div class="badge-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
-                  <path d="m9 12 2 2 4-4"/>
-                </svg>
-              </div>
-              <div class="badge-body">
-                <div class="badge-title">Research mode — Research Prototype</div>
-                <div class="badge-desc">Not for Clinical Diagnosis · Educational Prototype</div>
-              </div>
-            </div>
+          <div class="safety-text-group">
+            <span class="safety-headline">Clinical Decision Support Prototype — Research & Investigational Use Only</span>
+            <span class="safety-subtext">
+              Outputs are normalized vector similarity scores against biomedical text prompts in PubMedCLIP joint embedding space, not diagnostic certainty. <strong>Not for Clinical Diagnosis</strong> without independent radiologist review.
+            </span>
           </div>
-        </section>
+        </div>
+        <div class="safety-alert-actions">
+          <button class="btn-guidance-link" id="btnClinicalGuidance">Guidance & Compliance</button>
+        </div>
+      </div>
 
-        <!-- KPI Metrics Ribbon (4 Cards) -->
-        <section class="kpi-grid">
-          <!-- KPI 1 -->
-          <div class="kpi-card">
-            <div class="kpi-header">
-              <div class="kpi-icon teal-pulse">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-                </svg>
+      <!-- Main Workstation Layout Shell -->
+      <main class="workstation-container" id="viewportSection">
+
+        <!-- Left Column: Radiograph Ingestion, PACS Viewport & Preprocessing -->
+        <section class="workstation-col col-viewport" aria-label="Radiograph Viewer and Preprocessing Controls">
+          
+          <!-- Panel 01: Ingestion & Imaging Viewport -->
+          <div class="clinical-card panel-imaging">
+            <div class="card-header">
+              <div class="header-tag-cluster">
+                <span class="card-step-badge">01</span>
+                <h2 class="card-title">Chest Radiograph Viewport</h2>
               </div>
-              <div class="kpi-trend positive">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m7 7 10 10M17 7v10H7"/></svg>
-                <span>18.6%</span>
+              <div class="header-right-meta">
+                <span class="view-projection-badge" id="viewProjectionBadge">PA / ERECT</span>
               </div>
             </div>
-            <div class="kpi-value" id="kpiAnalysesCount">142</div>
-            <div class="kpi-label">Analyses this week</div>
-            <div class="kpi-sub">Across 8 controlled prompts</div>
-          </div>
 
-          <!-- KPI 2 -->
-          <div class="kpi-card">
-            <div class="kpi-header">
-              <div class="kpi-icon blue-pulse">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 20v-6M4.93 4.93l4.24 4.24M19.07 4.93l-4.24 4.24M2 12h6M16 12h6"/>
-                </svg>
-              </div>
-              <div class="kpi-trend positive">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m7 7 10 10M17 7v10H7"/></svg>
-                <span>4.2%</span>
-              </div>
-            </div>
-            <div class="kpi-value" id="kpiMeanScore">0.74</div>
-            <div class="kpi-label">Mean top-1 score</div>
-            <div class="kpi-sub">Prototype similarity score</div>
-          </div>
-
-          <!-- KPI 3 -->
-          <div class="kpi-card">
-            <div class="kpi-header">
-              <div class="kpi-icon amber-pulse">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M3 3v18h18"/>
-                  <path d="m19 9-5 5-4-4-3 3"/>
-                </svg>
+            <!-- Sample Case Selector Toolbar -->
+            <div class="case-library-toolbar">
+              <span class="case-lib-label">Evaluation Cases:</span>
+              <div class="case-preset-buttons" id="casePresetButtons">
+                <button class="case-preset-btn active" data-case="effusion" data-file="eval_003.png" title="Pleural Effusion Case">
+                  Effusion
+                </button>
+                <button class="case-preset-btn" data-case="pneumonia" data-file="eval_002.png" title="Pneumonia Case">
+                  Pneumonia
+                </button>
+                <button class="case-preset-btn" data-case="cardiomegaly" data-file="eval_005.png" title="Cardiomegaly Case">
+                  Cardiomegaly
+                </button>
+                <button class="case-preset-btn" data-case="atelectasis" data-file="eval_006.png" title="Atelectasis Case">
+                  Atelectasis
+                </button>
+                <button class="case-preset-btn" data-case="pneumothorax" data-file="eval_004.png" title="Pneumothorax Case">
+                  Pneumothorax
+                </button>
+                <button class="case-preset-btn" data-case="normal" data-file="eval_001.png" title="Normal Healthy Case">
+                  Normal
+                </button>
               </div>
             </div>
-            <div class="kpi-value" id="kpiThreshold">0.62</div>
-            <div class="kpi-label">Calibrated threshold</div>
-            <div class="kpi-sub">Evaluation set · n=120</div>
-          </div>
 
-          <!-- KPI 4 -->
-          <div class="kpi-card">
-            <div class="kpi-header">
-              <div class="kpi-icon coral-pulse">
+            <!-- DICOM / PACS Workstation Screen Canvas -->
+            <div class="pacs-viewport-wrapper" id="pacsViewportWrapper">
+              
+              <!-- Dropzone Container -->
+              <div class="dropzone-area" id="dropzone" tabindex="0" role="button" aria-label="Upload chest radiograph file">
+                <input type="file" id="fileInput" accept="image/png, image/jpeg, image/jpg, image/bmp, image/tiff, image/tif" class="file-input-hidden">
+                
+                <!-- Idle Upload State -->
+                <div class="dropzone-state-idle" id="dropzoneIdle">
+                  <div class="upload-pulse-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+                      <circle cx="9" cy="9" r="2"/>
+                      <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/>
+                    </svg>
+                  </div>
+                  <h3 class="upload-main-instruction">Upload Chest Radiograph</h3>
+                  <p class="upload-sub-instruction">Drag & drop DICOM-derived image or click to browse</p>
+                  <div class="upload-supported-formats">
+                    <span class="format-pill">PNG</span>
+                    <span class="format-pill">JPG</span>
+                    <span class="format-pill">TIFF</span>
+                    <span class="format-pill">BMP</span>
+                    <span class="format-pill-sub">Max 20MB</span>
+                  </div>
+                </div>
+
+                <!-- Active Radiograph Display -->
+                <div class="dropzone-state-active hidden" id="dropzoneActive">
+                  <div class="viewport-stage" id="viewportStage">
+                    
+                    <!-- Anatomic Crosshair / Grid Overlay (toggleable) -->
+                    <div class="anatomic-grid-overlay hidden" id="anatomicGridOverlay" aria-hidden="true">
+                      <div class="grid-line-vert"></div>
+                      <div class="grid-line-horiz"></div>
+                      <span class="grid-label-zone tl">R Upper Field</span>
+                      <span class="grid-label-zone tr">L Upper Field</span>
+                      <span class="grid-label-zone bl">R Costophrenic</span>
+                      <span class="grid-label-zone br">L Costophrenic</span>
+                    </div>
+
+                    <!-- Main Radiograph Image -->
+                    <div class="image-transform-container" id="imageTransformContainer">
+                      <img id="imagePreview" src="" alt="Clinical Chest Radiograph Preview" class="xray-image-element">
+                    </div>
+
+                    <!-- DICOM Corner Metadata Overlays -->
+                    <div class="dicom-corner-overlay top-left">
+                      <span class="d-meta-item" id="dicomPatientId">ANON_PT_8492</span>
+                      <span class="d-meta-item">DOB: DE-IDENTIFIED</span>
+                      <span class="d-meta-item" id="dicomStudyDate">2026-10-11 18:20</span>
+                    </div>
+                    <div class="dicom-corner-overlay top-right">
+                      <span class="d-meta-item">CHEST AP/PA</span>
+                      <span class="d-meta-item" id="dicomDimensions">2048 × 2048</span>
+                      <span class="d-meta-item">WINDOW: THORACIC</span>
+                    </div>
+                    <div class="dicom-corner-overlay bottom-left">
+                      <span class="d-meta-item">ZOOM: <span id="lblZoomLevel">100%</span></span>
+                      <span class="d-meta-item" id="lblFilterMode">FILTER: NORMAL</span>
+                    </div>
+                    <div class="dicom-corner-overlay bottom-right">
+                      <span class="d-meta-item">KVp: 120 · mA: 320</span>
+                      <span class="d-meta-item">MODALITY: DX</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PACS Viewing Controls Toolbar -->
+              <div class="pacs-control-toolbar" id="pacsControlToolbar">
+                <div class="toolbar-group">
+                  <button class="pacs-tool-btn" id="btnZoomIn" title="Zoom In (+25%)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="11" cy="11" r="8"/>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                      <line x1="11" y1="8" x2="11" y2="14"/>
+                      <line x1="8" y1="11" x2="14" y2="11"/>
+                    </svg>
+                  </button>
+                  <button class="pacs-tool-btn" id="btnZoomOut" title="Zoom Out (-25%)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="11" cy="11" r="8"/>
+                      <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                      <line x1="8" y1="11" x2="14" y2="11"/>
+                    </svg>
+                  </button>
+                  <button class="pacs-tool-btn" id="btnZoomFit" title="Fit to Viewport">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="15 3 21 3 21 9"/>
+                      <polyline points="9 21 3 21 3 15"/>
+                      <line x1="21" y1="3" x2="14" y2="10"/>
+                      <line x1="3" y1="21" x2="10" y2="14"/>
+                    </svg>
+                  </button>
+                </div>
+
+                <div class="toolbar-divider"></div>
+
+                <div class="toolbar-group">
+                  <button class="pacs-tool-btn" id="btnInvert" title="Invert Grayscale (Negative Mode)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M12 2a10 10 0 0 1 0 20Z" fill="currentColor"/>
+                    </svg>
+                    <span class="btn-text-sm">Invert</span>
+                  </button>
+                  <button class="pacs-tool-btn" id="btnToggleGrid" title="Toggle Anatomic Zone Guidelines">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect width="18" height="18" x="3" y="3" rx="2"/>
+                      <line x1="3" y1="12" x2="21" y2="12"/>
+                      <line x1="12" y1="3" x2="12" y2="21"/>
+                    </svg>
+                    <span class="btn-text-sm">Grid</span>
+                  </button>
+                </div>
+
+                <div class="toolbar-divider"></div>
+
+                <div class="toolbar-group window-controls">
+                  <label for="contrastSlider" class="slider-label" title="Adjust Contrast">Contr.</label>
+                  <input type="range" id="contrastSlider" min="70" max="180" value="100" class="pacs-range-slider" title="Contrast Window">
+                  <label for="brightnessSlider" class="slider-label" title="Adjust Brightness">Bright.</label>
+                  <input type="range" id="brightnessSlider" min="70" max="150" value="100" class="pacs-range-slider" title="Brightness Level">
+                </div>
+
+                <div class="toolbar-group toolbar-reset-group">
+                  <button class="pacs-tool-btn" id="btnResetViewer" title="Reset Image Viewport Adjustments">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                      <path d="M3 3v5h5"/>
+                    </svg>
+                    <span class="btn-text-sm">Reset</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Image Validation and Preprocessing Status Card -->
+            <div class="preprocessing-status-card" id="preprocessingCard">
+              <div class="preproc-card-header">
+                <span class="preproc-title">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                  Validation & Preprocessing Status
+                </span>
+                <span class="preproc-status-badge valid" id="preprocOverallStatus">PASSED</span>
+              </div>
+              <div class="preproc-grid">
+                <div class="preproc-item">
+                  <span class="preproc-metric-label">MIME & FORMAT</span>
+                  <span class="preproc-metric-val" id="valFormatCheck">PNG / Standard Image</span>
+                </div>
+                <div class="preproc-item">
+                  <span class="preproc-metric-label">DIMENSIONS</span>
+                  <span class="preproc-metric-val" id="valDimensionCheck">224 × 224 Auto-Scale</span>
+                </div>
+                <div class="preproc-item">
+                  <span class="preproc-metric-label">COLOR SPACE</span>
+                  <span class="preproc-metric-val" id="valColorCheck">3-Channel RGB Rescaled</span>
+                </div>
+                <div class="preproc-item">
+                  <span class="preproc-metric-label">VIT-B/32 PATCHES</span>
+                  <span class="preproc-metric-val" id="valPatchCheck">7×7 Spatial Matrix (49 Tokens)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- File Information Card & Actions -->
+            <div class="file-action-ribbon">
+              <div class="file-chip" id="fileInfoChip">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                <span class="filename-text" id="selectedFileName">sample_chest_xray.png</span>
+                <button class="btn-clear-study" id="btnClearFile" title="Remove current radiograph">✕</button>
+              </div>
+
+              <!-- Primary Analysis CTA Button -->
+              <button id="analyzeBtn" class="clinical-analyze-btn" disabled>
+                <span class="btn-spinner hidden" id="btnSpinner"></span>
+                <span class="btn-action-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polygon points="10 8 16 12 10 16 10 8" fill="currentColor"/>
+                  </svg>
+                </span>
+                <span class="btn-label-text">Execute Finding Analysis</span>
+              </button>
+            </div>
+
+            <!-- AI Analysis Progress Bar & Animation Container -->
+            <div class="analysis-progress-card hidden" id="analysisProgressCard">
+              <div class="progress-header-row">
+                <span class="progress-stage-text" id="analysisProgressText">Initializing ViT-B/32 multimodal vision encoder...</span>
+                <span class="progress-percent-text mono-text" id="analysisProgressPercent">0%</span>
+              </div>
+              <div class="progress-track-bar">
+                <div class="progress-fill-bar" id="analysisProgressFill"></div>
+              </div>
+            </div>
+
+            <!-- Error Notification Banner -->
+            <div class="clinical-error-card hidden" id="errorAlert" role="alert">
+              <div class="error-icon-box">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="12" cy="12" r="10"/>
-                  <polyline points="12 6 12 12 14 14"/>
+                  <line x1="12" y1="8" x2="12" y2="12"/>
+                  <line x1="12" y1="16" x2="12.01" y2="16"/>
                 </svg>
               </div>
-              <div class="kpi-trend neutral">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m7 7 10 10M17 7v10H7"/></svg>
-                <span>0.3s</span>
+              <div class="error-message-text" id="errorMessage">Analysis error occurred.</div>
+            </div>
+
+            <!-- Clinical Processing Stepper -->
+            <div class="workflow-stepper-box">
+              <div class="stepper-title">Analysis Pipeline Lifecycle:</div>
+              <div class="stepper-stages">
+                <div class="step-stage-item done" id="stepIngest">
+                  <span class="step-index">01</span>
+                  <span class="step-label">Ingest</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step-stage-item" id="stepPreprocess">
+                  <span class="step-index">02</span>
+                  <span class="step-label">Preprocess</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step-stage-item" id="stepEmbed">
+                  <span class="step-index">03</span>
+                  <span class="step-label">Embed ViT-B/32</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step-stage-item" id="stepSimilarity">
+                  <span class="step-index">04</span>
+                  <span class="step-label">Cosine Score</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step-stage-item" id="stepAttribution">
+                  <span class="step-index">05</span>
+                  <span class="step-label">Attribution</span>
+                </div>
               </div>
             </div>
-            <div class="kpi-value" id="kpiLatency">1.8s</div>
-            <div class="kpi-label">Model latency</div>
-            <div class="kpi-sub">Median inference time</div>
+
           </div>
         </section>
 
-        <!-- Main Middle Grid: 01 Input vs 02 Candidate Findings -->
-        <section class="middle-grid">
+        <!-- Right Column: Findings Matrix, Explainability & Calibration -->
+        <section class="workstation-col col-findings" id="findingsSection" aria-label="Structured Findings and Clinical Decision Support">
           
-          <!-- Card 01: Input Upload -->
-          <div class="rad-panel panel-input">
-            <div class="panel-header">
-              <div class="panel-tag-row">
-                <span class="panel-tag">01 · INPUT</span>
-                <div class="panel-header-icon" title="Frontal view required">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect width="18" height="18" x="3" y="3" rx="2"/>
-                    <path d="M9 3v18"/>
-                  </svg>
-                </div>
-              </div>
-              <h2 class="panel-title">Upload an X-ray</h2>
-              <p class="panel-desc">Add a frontal chest radiograph to begin the analysis pipeline.</p>
-            </div>
-
-            <!-- Upload Dropzone Area -->
-            <div class="dropzone-card" id="dropzone">
-              <input type="file" id="fileInput" accept="image/png, image/jpeg, image/bmp, image/tiff" class="file-input-hidden">
-              
-              <!-- Initial Empty Drop Content -->
-              <div class="dropzone-idle" id="dropzoneIdle">
-                <div class="upload-icon-circle">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/>
-                    <path d="M12 12v9"/>
-                    <path d="m16 16-4-4-4 4"/>
-                  </svg>
-                </div>
-                <div class="drop-primary-text">Drop your image here</div>
-                <div class="drop-secondary-text">or click to browse · PNG / JPG</div>
-              </div>
-
-              <!-- Selected File Active View -->
-              <div class="dropzone-active hidden" id="dropzoneActive">
-                <div class="file-selected-chip">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                    <polyline points="14 2 14 8 20 8"/>
-                  </svg>
-                  <span class="selected-filename" id="selectedFileName">sample_chest_xray.png</span>
-                  <span class="chip-check">✓</span>
-                  <button class="chip-clear" id="btnClearFile" title="Remove file">✕</button>
-                </div>
-                <!-- Interactive Preview Mini View -->
-                <div class="image-preview-box" id="imagePreviewBox">
-                  <img id="imagePreview" src="" alt="Chest X-ray Preview">
-                </div>
-              </div>
-            </div>
-
-            <!-- Action Controls -->
-            <div class="input-actions-bar">
-              <button id="analyzeBtn" class="analyze-btn" disabled>
-                <span class="btn-text">Analyze Chest X-Ray</span>
-                <span class="spinner hidden" id="btnSpinner"></span>
-              </button>
-              <button id="btnLoadDemoSample" class="demo-sample-btn" title="Load sample evaluation X-ray">
-                Demo Sample
-              </button>
-            </div>
-
-            <!-- Error Banner -->
-            <div class="alert-box error-box hidden" id="errorAlert">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" x2="12" y1="8" y2="12"/>
-                <line x1="12" x2="12.01" y1="16" y2="16"/>
-              </svg>
-              <span id="errorMessage">Analysis error occurred.</span>
-            </div>
-
-            <!-- Panel Footer Meta -->
-            <div class="panel-meta-footer">
-              <div class="meta-item">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
-                </svg>
-                <span>De-identified input only</span>
-              </div>
-              <div class="meta-item">
-                <span>Max 20 MB</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 02: Output Candidate Findings -->
-          <div class="rad-panel panel-output">
-            <div class="panel-header">
-              <div class="panel-tag-row">
-                <div class="tag-live-cluster">
-                  <span class="panel-tag">02 · OUTPUT</span>
-                  <span class="live-pill">
+          <!-- Panel 02: Structured Candidate Findings Matrix -->
+          <div class="clinical-card panel-results">
+            <div class="card-header">
+              <div class="header-tag-cluster">
+                <span class="card-step-badge">02</span>
+                <div class="title-with-pill">
+                  <h2 class="card-title">Structured Finding Predictions</h2>
+                  <span class="status-live-indicator" id="statusLiveIndicator">
                     <span class="live-dot"></span>
-                    <span>LIVE</span>
+                    <span>VERIFIED RUN</span>
                   </span>
                 </div>
-                <div class="run-cluster">
-                  <span class="run-id" id="displayRunId">RUN_8142</span>
-                  <button class="more-btn" title="More options">···</button>
+              </div>
+              <div class="header-right-meta">
+                <span class="run-audit-tag" id="displayRunId">RUN_8142</span>
+              </div>
+            </div>
+
+            <!-- Metrics Overview KPI Ribbon -->
+            <div class="clinical-kpi-row">
+              <div class="kpi-stat-card candidate-kpi">
+                <div class="kpi-stat-header">
+                  <span class="kpi-metric-title">Candidates Detected</span>
+                  <span class="kpi-badge-alert" id="kpiCandidateBadge">ACTIONABLE</span>
                 </div>
+                <div class="kpi-metric-val" id="countAboveThreshold">02</div>
+                <div class="kpi-metric-sub">Cosine score &ge; Calibrated cutoff</div>
               </div>
-              <h2 class="panel-title">Candidate findings</h2>
+
+              <div class="kpi-stat-card">
+                <div class="kpi-stat-header">
+                  <span class="kpi-metric-title">Prototype Confidence</span>
+                  <span class="kpi-model-tag" id="modelCheckpointLabel">PubMedCLIP ViT-B/32</span>
+                </div>
+                <div class="kpi-metric-val highlight-val" id="prototypeConfidence">0.7800</div>
+                <div class="kpi-metric-sub">Highest prototype similarity score</div>
+              </div>
+
+              <div class="kpi-stat-card">
+                <div class="kpi-stat-header">
+                  <span class="kpi-metric-title">Calibrated Cutoff</span>
+                  <button class="btn-info-pop" id="btnExplainThreshold" title="Calibrated on multi-center evaluation benchmark (n=120)">ℹ</button>
+                </div>
+                <div class="kpi-metric-val mono-val" id="currentThresholdDisplay">0.62</div>
+                <div class="kpi-metric-sub">Optimal F1 threshold benchmark</div>
+              </div>
+
+              <div class="kpi-stat-card">
+                <div class="kpi-stat-header">
+                  <span class="kpi-metric-title">Prompts Evaluated</span>
+                  <span class="kpi-tag-neutral">8 TARGETS</span>
+                </div>
+                <div class="kpi-metric-val mono-val" id="countPromptsEvaluated">08</div>
+                <div class="kpi-metric-sub">Zero-shot medical prompt bank</div>
+              </div>
             </div>
 
-            <!-- Summary Ribbon -->
-            <div class="output-summary-ribbon">
-              <div class="summary-stat-pair">
-                <div class="stat-number" id="countAboveThreshold">03</div>
-                <div class="stat-desc">above threshold</div>
-              </div>
-              <div class="summary-stat-pair">
-                <div class="stat-number" id="countPromptsEvaluated">08</div>
-                <div class="stat-desc">prompts evaluated</div>
-              </div>
-              <div class="threshold-pill-badge" id="thresholdDisplayBadge">
-                <span class="thresh-label">Threshold</span>
-                <span class="thresh-val" id="currentThresholdDisplay">0.62</span>
-              </div>
-            </div>
-
-            <!-- Structured Findings Table -->
-            <div class="table-container">
-              <table class="findings-table">
+            <!-- Structured Findings Table with all 8 Target Conditions -->
+            <div class="table-wrapper">
+              <table class="findings-table" aria-label="Radiological Findings Table">
                 <thead>
                   <tr>
-                    <th style="width: 44%;">FINDING</th>
-                    <th style="width: 36%;">SIMILARITY</th>
-                    <th style="width: 20%; text-align: right;">STATUS</th>
+                    <th scope="col" style="width: 8%;">RANK</th>
+                    <th scope="col" style="width: 38%;">MEDICAL FINDING & PATHOLOGY</th>
+                    <th scope="col" style="width: 34%;">IMAGE-TEXT SIMILARITY SCORE</th>
+                    <th scope="col" style="width: 20%; text-align: right;">CLINICAL STATUS</th>
                   </tr>
                 </thead>
                 <tbody id="findingsTbody">
-                  <!-- Default sample row set matching screenshot before user upload -->
-                  <tr data-finding="pleural_effusion" class="finding-row active-row">
-                    <td class="finding-cell">
-                      <span class="rank-num rank-1">01</span>
-                      <div class="finding-details">
-                        <span class="finding-title">Pleural effusion</span>
-                        <span class="finding-sub">Left costophrenic angle</span>
+                  <!-- Default 8 findings matching full target pathology bank -->
+                  <tr data-finding="pleural_effusion" class="finding-row active-row" tabindex="0">
+                    <td class="rank-col">
+                      <span class="rank-badge rank-1">01</span>
+                    </td>
+                    <td class="finding-col">
+                      <div class="finding-title-group">
+                        <span class="finding-main-name">Pleural Effusion</span>
+                        <span class="finding-category-tag">Pleural Space · Costophrenic blunting</span>
                       </div>
                     </td>
-                    <td class="score-cell">
-                      <div class="score-bar-wrapper">
-                        <span class="score-val">0.78</span>
-                        <div class="score-track">
-                          <div class="score-fill fill-coral" style="width: 78%;"></div>
+                    <td class="score-col">
+                      <div class="similarity-meter-wrap">
+                        <span class="score-number mono-text">0.7800</span>
+                        <div class="meter-bar-track">
+                          <div class="threshold-marker" style="left: 62%;" title="Calibrated Threshold: 0.62"></div>
+                          <div class="meter-bar-fill fill-candidate" style="width: 78%;"></div>
                         </div>
                       </div>
                     </td>
-                    <td class="status-cell">
+                    <td class="status-col">
                       <span class="status-badge status-candidate">Candidate</span>
                     </td>
                   </tr>
 
-                  <tr data-finding="atelectasis" class="finding-row">
-                    <td class="finding-cell">
-                      <span class="rank-num rank-2">02</span>
-                      <div class="finding-details">
-                        <span class="finding-title">Atelectasis</span>
-                        <span class="finding-sub">Basilar opacity</span>
+                  <tr data-finding="atelectasis" class="finding-row" tabindex="0">
+                    <td class="rank-col">
+                      <span class="rank-badge rank-2">02</span>
+                    </td>
+                    <td class="finding-col">
+                      <div class="finding-title-group">
+                        <span class="finding-main-name">Atelectasis</span>
+                        <span class="finding-category-tag">Parenchyma · Basilar collapse opacity</span>
                       </div>
                     </td>
-                    <td class="score-cell">
-                      <div class="score-bar-wrapper">
-                        <span class="score-val">0.64</span>
-                        <div class="score-track">
-                          <div class="score-fill fill-amber" style="width: 64%;"></div>
+                    <td class="score-col">
+                      <div class="similarity-meter-wrap">
+                        <span class="score-number mono-text">0.6400</span>
+                        <div class="meter-bar-track">
+                          <div class="threshold-marker" style="left: 62%;" title="Calibrated Threshold: 0.62"></div>
+                          <div class="meter-bar-fill fill-candidate" style="width: 64%;"></div>
                         </div>
                       </div>
                     </td>
-                    <td class="status-cell">
+                    <td class="status-col">
                       <span class="status-badge status-candidate">Candidate</span>
                     </td>
                   </tr>
 
-                  <tr data-finding="cardiomegaly" class="finding-row">
-                    <td class="finding-cell">
-                      <span class="rank-num rank-3">03</span>
-                      <div class="finding-details">
-                        <span class="finding-title">Cardiomegaly</span>
-                        <span class="finding-sub">Cardiothoracic ratio</span>
+                  <tr data-finding="cardiomegaly" class="finding-row" tabindex="0">
+                    <td class="rank-col">
+                      <span class="rank-badge rank-3">03</span>
+                    </td>
+                    <td class="finding-col">
+                      <div class="finding-title-group">
+                        <span class="finding-main-name">Cardiomegaly</span>
+                        <span class="finding-category-tag">Cardiac · Enlarged cardiothoracic ratio</span>
                       </div>
                     </td>
-                    <td class="score-cell">
-                      <div class="score-bar-wrapper">
-                        <span class="score-val">0.51</span>
-                        <div class="score-track">
-                          <div class="score-fill fill-blue" style="width: 51%;"></div>
+                    <td class="score-col">
+                      <div class="similarity-meter-wrap">
+                        <span class="score-number mono-text">0.5100</span>
+                        <div class="meter-bar-track">
+                          <div class="threshold-marker" style="left: 62%;" title="Calibrated Threshold: 0.62"></div>
+                          <div class="meter-bar-fill fill-review" style="width: 51%;"></div>
                         </div>
                       </div>
                     </td>
-                    <td class="status-cell">
+                    <td class="status-col">
                       <span class="status-badge status-review">Review</span>
                     </td>
                   </tr>
 
-                  <tr data-finding="pneumonia" class="finding-row">
-                    <td class="finding-cell">
-                      <span class="rank-num rank-muted">04</span>
-                      <div class="finding-details">
-                        <span class="finding-title">Pneumonia</span>
-                        <span class="finding-sub">Alveolar consolidation</span>
+                  <tr data-finding="pneumonia" class="finding-row" tabindex="0">
+                    <td class="rank-col">
+                      <span class="rank-badge rank-muted">04</span>
+                    </td>
+                    <td class="finding-col">
+                      <div class="finding-title-group">
+                        <span class="finding-main-name">Pneumonia</span>
+                        <span class="finding-category-tag">Infectious · Alveolar air-space infiltrate</span>
                       </div>
                     </td>
-                    <td class="score-cell">
-                      <div class="score-bar-wrapper">
-                        <span class="score-val">0.38</span>
-                        <div class="score-track">
-                          <div class="score-fill fill-muted" style="width: 38%;"></div>
+                    <td class="score-col">
+                      <div class="similarity-meter-wrap">
+                        <span class="score-number mono-text">0.3800</span>
+                        <div class="meter-bar-track">
+                          <div class="threshold-marker" style="left: 62%;" title="Calibrated Threshold: 0.62"></div>
+                          <div class="meter-bar-fill fill-unlikely" style="width: 38%;"></div>
                         </div>
                       </div>
                     </td>
-                    <td class="status-cell">
+                    <td class="status-col">
+                      <span class="status-badge status-unlikely">Below threshold</span>
+                    </td>
+                  </tr>
+
+                  <tr data-finding="consolidation" class="finding-row" tabindex="0">
+                    <td class="rank-col">
+                      <span class="rank-badge rank-muted">05</span>
+                    </td>
+                    <td class="finding-col">
+                      <div class="finding-title-group">
+                        <span class="finding-main-name">Consolidation</span>
+                        <span class="finding-category-tag">Airspace Disease · Confluent parenchymal opacity</span>
+                      </div>
+                    </td>
+                    <td class="score-col">
+                      <div class="similarity-meter-wrap">
+                        <span class="score-number mono-text">0.3400</span>
+                        <div class="meter-bar-track">
+                          <div class="threshold-marker" style="left: 62%;" title="Calibrated Threshold: 0.62"></div>
+                          <div class="meter-bar-fill fill-unlikely" style="width: 34%;"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="status-col">
+                      <span class="status-badge status-unlikely">Below threshold</span>
+                    </td>
+                  </tr>
+
+                  <tr data-finding="pulmonary_edema" class="finding-row" tabindex="0">
+                    <td class="rank-col">
+                      <span class="rank-badge rank-muted">06</span>
+                    </td>
+                    <td class="finding-col">
+                      <div class="finding-title-group">
+                        <span class="finding-main-name">Pulmonary Edema</span>
+                        <span class="finding-category-tag">Vascular / Interstitial · Perihilar batwing haze</span>
+                      </div>
+                    </td>
+                    <td class="score-col">
+                      <div class="similarity-meter-wrap">
+                        <span class="score-number mono-text">0.2900</span>
+                        <div class="meter-bar-track">
+                          <div class="threshold-marker" style="left: 62%;" title="Calibrated Threshold: 0.62"></div>
+                          <div class="meter-bar-fill fill-unlikely" style="width: 29%;"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="status-col">
+                      <span class="status-badge status-unlikely">Below threshold</span>
+                    </td>
+                  </tr>
+
+                  <tr data-finding="pneumothorax" class="finding-row" tabindex="0">
+                    <td class="rank-col">
+                      <span class="rank-badge rank-muted">07</span>
+                    </td>
+                    <td class="finding-col">
+                      <div class="finding-title-group">
+                        <span class="finding-main-name">Pneumothorax</span>
+                        <span class="finding-category-tag">Pleural Line · Peripheral apical air collection</span>
+                      </div>
+                    </td>
+                    <td class="score-col">
+                      <div class="similarity-meter-wrap">
+                        <span class="score-number mono-text">0.2200</span>
+                        <div class="meter-bar-track">
+                          <div class="threshold-marker" style="left: 62%;" title="Calibrated Threshold: 0.62"></div>
+                          <div class="meter-bar-fill fill-unlikely" style="width: 22%;"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="status-col">
+                      <span class="status-badge status-unlikely">Below threshold</span>
+                    </td>
+                  </tr>
+
+                  <tr data-finding="normal" class="finding-row" tabindex="0">
+                    <td class="rank-col">
+                      <span class="rank-badge rank-muted">08</span>
+                    </td>
+                    <td class="finding-col">
+                      <div class="finding-title-group">
+                        <span class="finding-main-name">Normal Healthy Lung</span>
+                        <span class="finding-category-tag">Clear Parenchyma · Sharp sulci and contour</span>
+                      </div>
+                    </td>
+                    <td class="score-col">
+                      <div class="similarity-meter-wrap">
+                        <span class="score-number mono-text">0.1900</span>
+                        <div class="meter-bar-track">
+                          <div class="threshold-marker" style="left: 62%;" title="Calibrated Threshold: 0.62"></div>
+                          <div class="meter-bar-fill fill-unlikely" style="width: 19%;"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="status-col">
                       <span class="status-badge status-unlikely">Below threshold</span>
                     </td>
                   </tr>
@@ -486,29 +835,32 @@
               </table>
             </div>
 
-            <!-- Model Info Footer -->
-            <div class="output-footer">
-              <div class="output-model-tag">
-                <span class="conf-lead">Prototype Confidence:</span>
-                <span class="conf-high" id="prototypeConfidence">0.7800</span>
-                <span class="conf-sub" id="modelCheckpointLabel">PubMedCLIP ViT-B/32</span>
+            <!-- Table Footer / Clinical Confidence Disclaimer -->
+            <div class="table-clinical-footer">
+              <div class="footer-legend">
+                <span class="legend-item"><span class="legend-dot dot-candidate"></span> Candidate (&ge; 0.62)</span>
+                <span class="legend-item"><span class="legend-dot dot-review"></span> Indeterminate / Review (0.50 - 0.61)</span>
+                <span class="legend-item"><span class="legend-dot dot-unlikely"></span> Sub-threshold (&lt; 0.50)</span>
               </div>
+              <div class="footer-hint">Click any finding row to load spatial patch-similarity attribution</div>
             </div>
           </div>
 
-        </section>
-
-        <!-- Bottom Grid: 03 Explainability vs 04 Calibration -->
-        <section class="bottom-grid">
-          
-          <!-- Card 03: Explainability -->
-          <div class="rad-panel panel-explainability" id="explainabilityCard">
-            <div class="panel-header">
-              <div class="panel-tag-row">
-                <span class="panel-tag">03 · EXPLAINABILITY</span>
-                <!-- Dropdown for Finding Selection -->
-                <div class="finding-select-wrapper">
-                  <select id="selectFindingExplain" class="finding-dropdown">
+          <!-- Split Lower Row: Panel 03 Explainability & Panel 04 Calibration -->
+          <div class="split-lower-grid">
+            
+            <!-- Panel 03: Explainability & Spatial Patch Attribution Workspace -->
+            <div class="clinical-card panel-explainability" id="explainabilityCard">
+              <div class="card-header">
+                <div class="header-tag-cluster">
+                  <span class="card-step-badge">03</span>
+                  <h2 class="card-title">Spatial Attribution</h2>
+                </div>
+                
+                <!-- Target Finding Selector -->
+                <div class="finding-selector-container">
+                  <label for="selectFindingExplain" class="sr-only">Select finding for spatial explainability</label>
+                  <select id="selectFindingExplain" class="clinical-select">
                     <option value="pleural_effusion">Pleural effusion</option>
                     <option value="atelectasis">Atelectasis</option>
                     <option value="cardiomegaly">Cardiomegaly</option>
@@ -520,268 +872,391 @@
                   </select>
                 </div>
               </div>
-              <h2 class="panel-title">Spatial attribution</h2>
-              <p class="panel-desc">Regions with stronger image-text contribution for the selected finding.</p>
+
+              <!-- Spatial Attribution Workspace Box -->
+              <div class="attribution-stage-box">
+                
+                <!-- Attribution Mode Tabs & Controls -->
+                <div class="attribution-nav-toolbar">
+                  <div class="view-mode-pill-group">
+                    <button class="pill-tab-btn active" id="btnModeGrid" title="View ViT-B/32 7x7 Patch Attention Grid">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect width="18" height="18" x="3" y="3" rx="2"/>
+                        <line x1="3" y1="9" x2="21" y2="9"/>
+                        <line x1="3" y1="15" x2="21" y2="15"/>
+                        <line x1="9" y1="3" x2="9" y2="21"/>
+                        <line x1="15" y1="3" x2="15" y2="21"/>
+                      </svg>
+                      <span>Patch Matrix (7×7)</span>
+                    </button>
+                    <button class="pill-tab-btn" id="btnModeOverlay" title="View Blended Spatial Heatmap Overlay">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 2a10 10 0 0 1 0 20Z"/>
+                      </svg>
+                      <span>Heatmap Overlay</span>
+                    </button>
+                  </div>
+
+                  <!-- Overlay Opacity Slider (visible in overlay mode) -->
+                  <div class="overlay-opacity-wrap hidden" id="overlayOpacityWrap">
+                    <label for="heatmapOpacitySlider" class="opacity-label">Blend:</label>
+                    <input type="range" id="heatmapOpacitySlider" min="10" max="90" value="50" class="mini-slider" title="Heatmap blend alpha">
+                    <span class="opacity-val mono-text" id="lblHeatmapOpacity">50%</span>
+                  </div>
+                </div>
+
+                <!-- Visual Canvas Stage Area -->
+                <div class="attribution-display-stage" id="attributionDisplayStage">
+                  
+                  <!-- 7x7 Patch Matrix Grid View -->
+                  <div class="patch-grid-frame" id="patchGridContainer">
+                    <div class="anatomic-midline-guide" title="Anatomical Spine / Midline Alignment"></div>
+                    <div class="patch-grid-7x7" id="patchGrid7x7" role="grid" aria-label="7 by 7 spatial patch attention grid">
+                      <!-- Generated 49 patch cells -->
+                    </div>
+                  </div>
+
+                  <!-- Heatmap Overlay View -->
+                  <div class="real-overlay-container hidden" id="realOverlayContainer">
+                    <img id="realOverlayImg" src="" alt="Attribution Heatmap Overlay" class="overlay-image">
+                  </div>
+
+                </div>
+
+                <!-- Anatomic Focal Zone Bar -->
+                <div class="anatomic-focal-bar">
+                  <div class="focal-zone-item">
+                    <span class="focal-pulse-dot"></span>
+                    <span class="focal-label" id="attentionLocationText">PEAK ATTENTION: LEFT COSTOPHRENIC SULCUS</span>
+                  </div>
+                  <div class="focal-patch-coords" id="focalPatchCoords">
+                    <span>Center Patch: (5, 4) · ViT-B/32 Spatial Attn</span>
+                  </div>
+                </div>
+
+                <!-- Heatmap Gradient Scale & Footnote -->
+                <div class="legend-scale-row">
+                  <div class="scale-label-pair">
+                    <span class="scale-text">Low Alignment (0.0)</span>
+                    <div class="color-scale-bar" aria-hidden="true"></div>
+                    <span class="scale-text">Peak Alignment (1.0)</span>
+                  </div>
+                </div>
+
+                <!-- Explainability Disclaimer -->
+                <p class="explain-disclaimer-text" id="explainDisclaimer">
+                  The visualization represents spatial patch-similarity attribution across 7×7 vision encoder tokens and should not be interpreted as a clinically validated explanation of disease. (Patch-similarity attribution, not Grad-CAM).
+                </p>
+              </div>
             </div>
 
-            <!-- High-Tech PACS Spatial Viewer Container -->
-            <div class="pacs-viewer-frame" id="pacsViewerFrame">
-              <!-- Corner Brackets -->
-              <span class="bracket bracket-tl">⌜</span>
-              <span class="bracket bracket-tr">⌝</span>
-              <span class="bracket bracket-bl">⌞</span>
-              <span class="bracket bracket-br">⌟</span>
-
-              <!-- Top Viewer Metadata -->
-              <div class="viewer-top-meta">
-                <span class="view-tag">AP / PORTABLE</span>
-                <div class="view-mode-toggle">
-                  <button class="mode-btn active" id="btnModeGrid" title="7x7 Spatial Patch Grid">Patch Grid</button>
-                  <button class="mode-btn" id="btnModeOverlay" title="Grad-CAM Image Overlay">Overlay</button>
+            <!-- Panel 04: Decision Boundary Calibration & Zero-Shot Architecture -->
+            <div class="clinical-card panel-calibration" id="calibrationSection">
+              <div class="card-header">
+                <div class="header-tag-cluster">
+                  <span class="card-step-badge">04</span>
+                  <h2 class="card-title">Calibration & Boundary</h2>
+                </div>
+                <div class="header-right-meta">
+                  <span class="calib-status-badge">Optimum F1: 0.62</span>
                 </div>
               </div>
 
-              <!-- 7x7 Grid View Canvas / Container -->
-              <div class="patch-matrix-stage" id="patchMatrixStage">
-                <!-- Center vertical guideline representing anatomical spine alignment -->
-                <div class="spine-guide"></div>
-
-                <!-- 7x7 Patch Grid (49 tiles) -->
-                <div class="patch-grid-7x7" id="patchGrid7x7">
-                  <!-- Dynamically rendered 49 patch cells -->
+              <!-- Threshold Sweep Bar Visualization -->
+              <div class="calibration-content-wrap">
+                <div class="sweep-chart-header">
+                  <span class="chart-sub-label">Evaluation Sensitivity / F1 across Cutoff Thresholds:</span>
                 </div>
 
-                <!-- Full Overlay Image Container (toggled in Overlay mode) -->
-                <div class="real-overlay-container hidden" id="realOverlayContainer">
-                  <img id="realOverlayImg" src="" alt="Attribution Heatmap Overlay">
-                </div>
-              </div>
+                <!-- Chart Canvas -->
+                <div class="sweep-chart-container">
+                  <div class="chart-y-axis">
+                    <span>1.0</span>
+                    <span>0.75</span>
+                    <span>0.50</span>
+                    <span>0.25</span>
+                    <span>0</span>
+                  </div>
 
-              <!-- Bottom Viewer Metadata -->
-              <div class="viewer-bottom-meta">
-                <div class="attention-target-badge" id="attentionTargetBadge">
-                  <span class="target-pulse"></span>
-                  <span id="attentionLocationText">HIGH ATTENTION · LEFT BASE</span>
+                  <div class="chart-bars-stage" id="chartBarsStage">
+                    <!-- Benchmark Horizontal Guideline at 0.62 -->
+                    <div class="benchmark-line" style="bottom: 62%;">
+                      <span class="benchmark-value">0.62 Target</span>
+                    </div>
+
+                    <!-- Interactive Bars Grid -->
+                    <div class="bars-flex-container">
+                      <div class="sweep-bar-col" data-thresh="0.20" data-f1="0.45" title="Threshold 0.20 · High Sensitivity, Low Specificity">
+                        <div class="bar-fill" style="height: 35%;"></div>
+                        <span class="bar-label">0.20</span>
+                      </div>
+                      <div class="sweep-bar-col" data-thresh="0.30" data-f1="0.52" title="Threshold 0.30">
+                        <div class="bar-fill" style="height: 52%;"></div>
+                        <span class="bar-label">0.30</span>
+                      </div>
+                      <div class="sweep-bar-col" data-thresh="0.40" data-f1="0.71" title="Threshold 0.40">
+                        <div class="bar-fill" style="height: 70%;"></div>
+                        <span class="bar-label">0.40</span>
+                      </div>
+                      <div class="sweep-bar-col" data-thresh="0.50" data-f1="0.84" title="Threshold 0.50">
+                        <div class="bar-fill" style="height: 82%;"></div>
+                        <span class="bar-label">0.50</span>
+                      </div>
+                      <div class="sweep-bar-col calibrated-optimal" data-thresh="0.62" data-f1="0.94" title="Calibrated Optimum (0.62) · Highest F1 Balance">
+                        <div class="optimal-pip" aria-hidden="true">◆</div>
+                        <div class="bar-fill optimal-fill" style="height: 94%;"></div>
+                        <span class="bar-label highlight-label">0.62</span>
+                      </div>
+                      <div class="sweep-bar-col" data-thresh="0.70" data-f1="0.78" title="Threshold 0.70">
+                        <div class="bar-fill" style="height: 78%;"></div>
+                        <span class="bar-label">0.70</span>
+                      </div>
+                      <div class="sweep-bar-col" data-thresh="0.80" data-f1="0.58" title="Threshold 0.80">
+                        <div class="bar-fill" style="height: 58%;"></div>
+                        <span class="bar-label">0.80</span>
+                      </div>
+                      <div class="sweep-bar-col" data-thresh="0.90" data-f1="0.46" title="Threshold 0.90 · High Specificity, Low Sensitivity">
+                        <div class="bar-fill" style="height: 46%;"></div>
+                        <span class="bar-label">0.90</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="spec-meta">
-                  <span>SAMPLE_0142 · 2048 × 2048</span>
+
+                <!-- Calibration Status Card -->
+                <div class="calibration-metric-card">
+                  <div class="metric-card-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
+                      <polyline points="9 12 11 14 15 10"/>
+                    </svg>
+                  </div>
+                  <div class="metric-card-body">
+                    <span class="metric-card-title">Calibrated Operating Point: 0.62</span>
+                    <span class="metric-card-desc">Trained on PubMedCLIP Vision-Language joint embedding space with multi-label evaluation set (n=120).</span>
+                  </div>
                 </div>
+
               </div>
             </div>
 
-            <!-- Legend and Footnote -->
-            <div class="explainability-legend-row">
-              <div class="legend-scale">
-                <span class="scale-label">LOW CONTRIBUTION</span>
-                <div class="scale-bar"></div>
-                <span class="scale-label">HIGH CONTRIBUTION</span>
-              </div>
-              <div class="grid-spec-label">7 × 7 patch grid · normalized</div>
-            </div>
-            <p class="explain-disclaimer-text" id="explainDisclaimer">
-              The visualization represents model attention/similarity attribution and should not be interpreted as a clinically validated explanation of disease.
+          </div>
+
+        </section>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Structured Clinical Diagnostic Report Modal -->
+  <div class="modal-backdrop hidden" id="reportModal" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle">
+    <div class="modal-dialog modal-report">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <span class="modal-pill-tag">CLINICAL DECISION SUPPORT DRAFT</span>
+          <h3 id="reportModalTitle" class="modal-main-title">Structured Radiologic Finding Report</h3>
+        </div>
+        <button class="modal-close-btn" id="btnCloseReportModal" aria-label="Close report modal">✕</button>
+      </div>
+
+      <div class="modal-body report-printable-area" id="reportPrintableArea">
+        <!-- Report Header -->
+        <div class="report-meta-grid">
+          <div class="report-meta-box">
+            <span class="rm-label">PATIENT / STUDY ID:</span>
+            <span class="rm-val" id="rptStudyId">CXR-2026-8492 (De-identified)</span>
+          </div>
+          <div class="report-meta-box">
+            <span class="rm-label">MODALITY & VIEW:</span>
+            <span class="rm-val">Chest Radiograph · Frontal PA/AP</span>
+          </div>
+          <div class="report-meta-box">
+            <span class="rm-label">ANALYSIS ENGINE:</span>
+            <span class="rm-val">PubMedCLIP (ViT-B/32 Zero-Shot)</span>
+          </div>
+          <div class="report-meta-box">
+            <span class="rm-label">ANALYSIS TIMESTAMP:</span>
+            <span class="rm-val" id="rptTimestamp">2026-10-11 18:20 UTC</span>
+          </div>
+        </div>
+
+        <div class="report-section-divider"></div>
+
+        <!-- Section: Candidate Findings -->
+        <div class="report-section">
+          <h4 class="report-section-heading">1. CANDIDATE MEDICAL FINDINGS (Cosine Similarity &ge; 0.62)</h4>
+          <div class="report-findings-list" id="rptCandidateList">
+            <!-- Dynamically populated candidate findings -->
+          </div>
+        </div>
+
+        <!-- Section: Secondary Differentials -->
+        <div class="report-section">
+          <h4 class="report-section-heading">2. SECONDARY DIFFERENTIALS & SUB-THRESHOLD TARGETS</h4>
+          <div class="report-findings-list" id="rptSecondaryList">
+            <!-- Dynamically populated secondary findings -->
+          </div>
+        </div>
+
+        <!-- Section: Explainability & Attribution -->
+        <div class="report-section">
+          <h4 class="report-section-heading">3. SPATIAL ATTENTION & ANATOMIC LOCALIZATION</h4>
+          <p class="report-text" id="rptExplainSummary">
+            Spatial patch-text similarity attribution localized peak vision-language attention at the left basilar costophrenic angle.
+          </p>
+        </div>
+
+        <!-- Section: Radiologist Impression Draft -->
+        <div class="report-section">
+          <h4 class="report-section-heading">4. AI-ASSISTED RADIOLOGIC IMPRESSION (DRAFT)</h4>
+          <div class="impression-draft-box" id="rptImpressionText">
+            AI-assisted zero-shot evaluation demonstrates prominent image-text similarity for Pleural Effusion (similarity: 0.7800) and Atelectasis (similarity: 0.6400). Clinical correlation and correlation with prior imaging is recommended.
+          </div>
+        </div>
+
+        <!-- Mandatory Regulatory Disclaimer -->
+        <div class="report-disclaimer-box">
+          <strong>REGULATORY NOTICE:</strong> This report is generated by a research prototype AI decision support system (PubMedCLIP ViT-B/32). This document is not a finalized diagnostic interpretation and requires review, modification, and sign-off by a licensed radiologist.
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal-secondary" id="btnCopyReport">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+          </svg>
+          <span id="lblCopyBtn">Copy Impression</span>
+        </button>
+        <button class="btn-modal-primary" id="btnPrintReport">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 6 2 18 2 18 9"/>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+            <rect width="12" height="8" x="6" y="14"/>
+          </svg>
+          <span>Print / Export PDF</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controlled Prompt Library Modal -->
+  <div class="modal-backdrop hidden" id="promptLibraryModal" role="dialog" aria-modal="true" aria-labelledby="promptModalTitle">
+    <div class="modal-dialog modal-prompts">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <span class="modal-pill-tag">MULTIMODAL EMBEDDING BANK</span>
+          <h3 id="promptModalTitle" class="modal-main-title">Controlled Medical Finding Prompts</h3>
+        </div>
+        <button class="modal-close-btn" id="btnClosePromptModal" aria-label="Close prompt library modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-lead-text">
+          Zero-shot vision-language classification operates by embedding standardized clinical text queries into PubMedCLIP's multimodal latent space and computing cosine similarity against the 512-dimensional image embedding:
+        </p>
+        
+        <div class="prompt-table-container">
+          <table class="prompt-spec-table">
+            <thead>
+              <tr>
+                <th style="width: 25%;">FINDING</th>
+                <th style="width: 55%;">CONTROLLED CLINICAL PROMPT STRING</th>
+                <th style="width: 20%;">ANATOMIC TARGET</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong class="prompt-name">Normal</strong></td>
+                <td><code>"A chest X-ray showing a normal healthy lung"</code></td>
+                <td><span class="tag-zone">Bilateral Fields</span></td>
+              </tr>
+              <tr>
+                <td><strong class="prompt-name">Pneumonia</strong></td>
+                <td><code>"A chest X-ray showing pneumonia"</code></td>
+                <td><span class="tag-zone">Alveolar / Parenchyma</span></td>
+              </tr>
+              <tr>
+                <td><strong class="prompt-name">Pleural Effusion</strong></td>
+                <td><code>"A chest X-ray showing pleural effusion"</code></td>
+                <td><span class="tag-zone">Costophrenic Angles</span></td>
+              </tr>
+              <tr>
+                <td><strong class="prompt-name">Pneumothorax</strong></td>
+                <td><code>"A chest X-ray showing pneumothorax"</code></td>
+                <td><span class="tag-zone">Pleural Line / Apex</span></td>
+              </tr>
+              <tr>
+                <td><strong class="prompt-name">Cardiomegaly</strong></td>
+                <td><code>"A chest X-ray showing cardiomegaly"</code></td>
+                <td><span class="tag-zone">Cardiac Silhouette</span></td>
+              </tr>
+              <tr>
+                <td><strong class="prompt-name">Atelectasis</strong></td>
+                <td><code>"A chest X-ray showing atelectasis"</code></td>
+                <td><span class="tag-zone">Lung Bases / Lobar</span></td>
+              </tr>
+              <tr>
+                <td><strong class="prompt-name">Pulmonary Edema</strong></td>
+                <td><code>"A chest X-ray showing pulmonary edema"</code></td>
+                <td><span class="tag-zone">Perihilar / Batwing</span></td>
+              </tr>
+              <tr>
+                <td><strong class="prompt-name">Consolidation</strong></td>
+                <td><code>"A chest X-ray showing consolidation"</code></td>
+                <td><span class="tag-zone">Air-space Opacity</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Guidance & Compliance Modal -->
+  <div class="modal-backdrop hidden" id="guidanceModal" role="dialog" aria-modal="true" aria-labelledby="guidanceModalTitle">
+    <div class="modal-dialog modal-guidance">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <span class="modal-pill-tag">CLINICAL DECISION SUPPORT COMPLIANCE</span>
+          <h3 id="guidanceModalTitle" class="modal-main-title">Clinical Guidance & Safe AI Practice</h3>
+        </div>
+        <button class="modal-close-btn" id="btnCloseGuidanceModal" aria-label="Close guidance modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="guidance-grid">
+          <div class="guidance-card">
+            <h4>1. Multimodal Similarity vs. Diagnostic Probability</h4>
+            <p>
+              PubMedCLIP outputs are normalized cosine similarities between the image visual embedding and medical prompt text embeddings. A score of 0.78 denotes high embedding proximity in biomedical feature space — <em>not</em> an empirical 78% prevalence probability.
             </p>
           </div>
-
-          <!-- Card 04: Calibration -->
-          <div class="rad-panel panel-calibration">
-            <div class="panel-header">
-              <div class="panel-tag-row">
-                <span class="panel-tag">04 · CALIBRATION</span>
-                <button class="link-arrow-btn" id="btnOpenCalibrationReport" title="View Full Calibration Report">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M7 17 17 7M7 7h10v10"/>
-                  </svg>
-                </button>
-              </div>
-              <h2 class="panel-title">Threshold sweep</h2>
-              <p class="panel-desc">Candidate boundary selected against the evaluation set.</p>
-            </div>
-
-            <!-- Threshold Sweep Interactive Bar Chart -->
-            <div class="sweep-chart-container">
-              <!-- Y-Axis Scale -->
-              <div class="chart-y-axis">
-                <span>1.0</span>
-                <span>0.75</span>
-                <span>0.50</span>
-                <span>0.25</span>
-                <span>0</span>
-              </div>
-
-              <!-- Bars Canvas Area -->
-              <div class="chart-bars-stage" id="chartBarsStage">
-                <!-- Benchmark Horizontal Guideline at 0.62 -->
-                <div class="benchmark-line" style="bottom: 62%;">
-                  <span class="benchmark-value">0.62</span>
-                </div>
-
-                <!-- 9 Bars Grid -->
-                <div class="bars-flex-container">
-                  <div class="sweep-bar-col" data-thresh="0.20" data-f1="0.45">
-                    <div class="bar-fill" style="height: 35%;"></div>
-                    <span class="bar-label">0.20</span>
-                  </div>
-                  <div class="sweep-bar-col" data-thresh="0.30" data-f1="0.52">
-                    <div class="bar-fill" style="height: 52%;"></div>
-                    <span class="bar-label"></span>
-                  </div>
-                  <div class="sweep-bar-col" data-thresh="0.40" data-f1="0.71">
-                    <div class="bar-fill" style="height: 70%;"></div>
-                    <span class="bar-label">0.40</span>
-                  </div>
-                  <div class="sweep-bar-col" data-thresh="0.50" data-f1="0.84">
-                    <div class="bar-fill" style="height: 82%;"></div>
-                    <span class="bar-label"></span>
-                  </div>
-                  <div class="sweep-bar-col calibrated-optimal" data-thresh="0.62" data-f1="0.94">
-                    <!-- Diamond Pip on top of optimal bar -->
-                    <div class="optimal-pip">◆</div>
-                    <div class="bar-fill optimal-fill" style="height: 94%;"></div>
-                    <span class="bar-label highlight-label">0.62 calibrated</span>
-                  </div>
-                  <div class="sweep-bar-col" data-thresh="0.70" data-f1="0.78">
-                    <div class="bar-fill" style="height: 78%;"></div>
-                    <span class="bar-label"></span>
-                  </div>
-                  <div class="sweep-bar-col" data-thresh="0.80" data-f1="0.58">
-                    <div class="bar-fill" style="height: 58%;"></div>
-                    <span class="bar-label">0.80</span>
-                  </div>
-                  <div class="sweep-bar-col" data-thresh="0.90" data-f1="0.46">
-                    <div class="bar-fill" style="height: 46%;"></div>
-                    <span class="bar-label"></span>
-                  </div>
-                  <div class="sweep-bar-col" data-thresh="1.00" data-f1="0.28">
-                    <div class="bar-fill" style="height: 28%;"></div>
-                    <span class="bar-label">1.00</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Calibration Status Card Footer -->
-            <div class="calibration-locked-card">
-              <div class="locked-icon">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <path d="m5 12 5 5L20 7"/>
-                </svg>
-              </div>
-              <div class="locked-info">
-                <div class="locked-title">Threshold locked at 0.62</div>
-                <div class="locked-sub">Optimized for balanced precision / recall</div>
-              </div>
-            </div>
+          <div class="guidance-card">
+            <h4>2. Zero-Shot Generalization Boundaries</h4>
+            <p>
+              The zero-shot paradigm avoids fine-tuning overfitting but may exhibit sensitivity to projection view (PA vs. AP), patient rotation, foreign bodies (pacemakers, endotracheal tubes), or severe scoliosis.
+            </p>
           </div>
-
-        </section>
-
-        <!-- Bottom Informational Banner: How this prototype works -->
-        <section class="how-it-works-banner">
-          <div class="banner-left">
-            <div class="banner-beaker-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M10 2v7.31M14 2v7.31M8.5 2h7M14 9.3a6.5 6.5 0 1 1-4 0"/>
-                <path d="M5.52 16h12.96"/>
-              </svg>
-            </div>
-            <div class="banner-title-block">
-              <div class="banner-heading">How this prototype works</div>
-              <div class="banner-subheading">Transparent by design - zero-shot inference</div>
-            </div>
+          <div class="guidance-card">
+            <h4>3. Spatial Patch Attribution Interpretation</h4>
+            <p>
+              The 7×7 spatial attribution matrix highlights the ViT-B/32 vision encoder tokens with the greatest cosine alignment to the finding prompt. It serves as visual attribution and should not be used as an exact anatomical segmentation boundary.
+            </p>
           </div>
-
-          <!-- Flow Pipeline Steps -->
-          <div class="pipeline-flow">
-            <div class="pipeline-step">
-              <span class="step-num">01</span>
-              <span class="step-name">Preprocess</span>
-              <span class="step-detail">Standardize image</span>
-            </div>
-            <div class="pipeline-arrow">→</div>
-            <div class="pipeline-step">
-              <span class="step-num">02</span>
-              <span class="step-name">Embed</span>
-              <span class="step-detail">Image + text vectors</span>
-            </div>
-            <div class="pipeline-arrow">→</div>
-            <div class="pipeline-step">
-              <span class="step-num">03</span>
-              <span class="step-name">Compare</span>
-              <span class="step-detail">Cosine similarity</span>
-            </div>
-            <div class="pipeline-arrow">→</div>
-            <div class="pipeline-step">
-              <span class="step-num">04</span>
-              <span class="step-name">Explain</span>
-              <span class="step-detail">Spatial attribution</span>
-            </div>
-          </div>
-
-          <button class="methodology-link-btn" id="btnMethodologyModal">
-            <span>Read methodology</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M7 17 17 7M7 7h10v10"/>
-            </svg>
-          </button>
-        </section>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- Prompt Library Modal / Drawer -->
-  <div class="modal-backdrop hidden" id="promptLibraryModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div class="modal-title-wrap">
-          <span class="modal-tag">RESOURCES</span>
-          <h3>Controlled Prompt Library (8 Prompts)</h3>
-        </div>
-        <button class="modal-close-btn" id="btnClosePromptModal">✕</button>
-      </div>
-      <div class="modal-body">
-        <p class="modal-desc">
-          Zero-shot vision-language evaluation relies on controlled clinical prompt formulation. Each prompt targets a key thoracic finding encoded via PubMedCLIP:
-        </p>
-        <div class="prompt-grid-list">
-          <div class="prompt-item">
-            <span class="prompt-finding">Normal</span>
-            <code>"A chest X-ray showing a normal healthy lung"</code>
-          </div>
-          <div class="prompt-item">
-            <span class="prompt-finding">Pneumonia</span>
-            <code>"A chest X-ray showing pneumonia"</code>
-          </div>
-          <div class="prompt-item">
-            <span class="prompt-finding">Pleural Effusion</span>
-            <code>"A chest X-ray showing pleural effusion"</code>
-          </div>
-          <div class="prompt-item">
-            <span class="prompt-finding">Pneumothorax</span>
-            <code>"A chest X-ray showing pneumothorax"</code>
-          </div>
-          <div class="prompt-item">
-            <span class="prompt-finding">Cardiomegaly</span>
-            <code>"A chest X-ray showing cardiomegaly"</code>
-          </div>
-          <div class="prompt-item">
-            <span class="prompt-finding">Atelectasis</span>
-            <code>"A chest X-ray showing atelectasis"</code>
-          </div>
-          <div class="prompt-item">
-            <span class="prompt-finding">Pulmonary Edema</span>
-            <code>"A chest X-ray showing pulmonary edema"</code>
-          </div>
-          <div class="prompt-item">
-            <span class="prompt-finding">Consolidation</span>
-            <code>"A chest X-ray showing consolidation"</code>
+          <div class="guidance-card">
+            <h4>4. Human-in-the-Loop Requirement</h4>
+            <p>
+              This tool is classified as a Clinical Decision Support (CDS) Research Prototype. All candidate findings must be reviewed, confirmed, or dismissed by a board-certified radiologist or qualified physician.
+            </p>
           </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Application Logic -->
   <script src="app.js"></script>
 </body>
 </html>
