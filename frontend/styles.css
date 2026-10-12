@@ -4109,3 +4109,285 @@ body.clinical-body {
   color: var(--color-normal) !important;
   border-color: rgba(72, 176, 152, 0.5) !important;
 }
+/* ==========================================================================
+   MULTI-PANEL SUITE VIEW STYLING (DASHBOARD, VERIFICATION, EVIDENCE, METRICS)
+   ========================================================================== */
+.view-panel-section {
+  display: none;
+  padding: 1.5rem 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.view-panel-section.active-view {
+  display: block;
+  animation: fadeInView 180ms ease;
+}
+
+@keyframes fadeInView {
+  from { opacity: 0; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.view-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.view-title-group h2 {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.35rem 0;
+  letter-spacing: -0.01em;
+}
+
+.view-title-group p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Dashboard KPI Card Grid */
+.dash-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.dash-kpi-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.dash-kpi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.65rem;
+}
+
+.dash-kpi-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.dash-kpi-val {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  line-height: 1.2;
+}
+
+.dash-kpi-sub {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  margin-top: 0.35rem;
+}
+
+/* Modality Capability Grid */
+.modality-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.15rem;
+  margin-bottom: 2rem;
+}
+
+.modality-catalog-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  transition: border-color 150ms ease;
+}
+
+.modality-catalog-card.supported {
+  border-color: rgba(86, 198, 181, 0.45);
+  background: rgba(86, 198, 181, 0.04);
+}
+
+.modality-catalog-card.planned {
+  border-color: rgba(131, 183, 240, 0.3);
+}
+
+.modality-catalog-card.unsupported {
+  border-color: rgba(224, 108, 117, 0.3);
+}
+
+.mcc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.mcc-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.mcc-region {
+  font-size: 0.76rem;
+  color: var(--text-dim);
+  margin-top: 0.2rem;
+}
+
+.mcc-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.mcc-badge.supported {
+  background: rgba(86, 198, 181, 0.18);
+  color: #56C6B5;
+  border: 1px solid rgba(86, 198, 181, 0.4);
+}
+
+.mcc-badge.planned {
+  background: rgba(131, 183, 240, 0.15);
+  color: #83B7F0;
+  border: 1px solid rgba(131, 183, 240, 0.35);
+}
+
+.mcc-badge.unsupported {
+  background: rgba(224, 108, 117, 0.15);
+  color: #E06C75;
+  border: 1px solid rgba(224, 108, 117, 0.35);
+}
+
+.mcc-body {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.mcc-meta {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  background: var(--bg-viewport);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Call to Action Button */
+.btn-cta-launch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-primary);
+  color: #101A2B !important;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 150ms ease;
+}
+
+.btn-cta-launch:hover {
+  background: var(--color-primary-hover);
+}
+
+/* Guidelines Search Bar */
+.evidence-search-bar {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.evidence-search-input {
+  flex: 1;
+  background: var(--bg-viewport);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: inherit;
+}
+
+.evidence-search-input:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+.btn-search-cta {
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary-border);
+  padding: 0 1.25rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 150ms ease;
+}
+
+.btn-search-cta:hover {
+  background: var(--color-primary);
+  color: #101A2B;
+}
+
+/* Empty State Box */
+.empty-state-box {
+  background: var(--bg-surface);
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 3rem 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.empty-state-icon {
+  margin-bottom: 0.75rem;
+  color: var(--text-dim);
+}
+
+.empty-state-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.empty-state-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  max-width: 480px;
+  margin: 0 auto 1.25rem auto;
+  line-height: 1.45;
+}

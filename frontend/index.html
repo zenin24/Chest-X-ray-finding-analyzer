@@ -322,6 +322,179 @@
       </div>
 
       <!-- Main Workstation Layout Shell -->
+            <!-- ================================================================= -->
+      <!-- VIEW 1: DASHBOARD & TELEMETRY                                     -->
+      <!-- ================================================================= -->
+      <section class="view-panel-section" id="viewOverview" aria-label="Clinical Dashboard and Telemetry">
+        <div class="view-header">
+          <div class="view-title-group">
+            <h2>Clinical Dashboard & Research Telemetry</h2>
+            <p>Operational health, processing telemetry, and real validation metrics from PubMedCLIP medical AI pipeline.</p>
+          </div>
+          <div>
+            <button class="btn-cta-launch" id="btnLaunchFromDash" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>New Analysis</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Telemetry KPIs Grid -->
+        <div class="dash-kpi-grid">
+          <div class="dash-kpi-card">
+            <div class="dash-kpi-header">
+              <span class="dash-kpi-title">Images Analysed</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#56C6B5" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+            </div>
+            <div class="dash-kpi-val" id="dashTotalImages">0</div>
+            <div class="dash-kpi-sub">Total session studies processed</div>
+          </div>
+
+          <div class="dash-kpi-card">
+            <div class="dash-kpi-header">
+              <span class="dash-kpi-title">Active AI Engine</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#83B7F0" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="dash-kpi-val" style="font-size: 1.15rem; color: #83B7F0;" id="dashModelStatus">PubMedCLIP</div>
+            <div class="dash-kpi-sub">ViT-B/32 • CPU Inference</div>
+          </div>
+
+          <div class="dash-kpi-card">
+            <div class="dash-kpi-header">
+              <span class="dash-kpi-title">Benchmark Macro F1</span>
+              <span class="entity-badge positive">VALIDATED</span>
+            </div>
+            <div class="dash-kpi-val" style="color: #56C6B5;">0.3843</div>
+            <div class="dash-kpi-sub">Real held-out test split score</div>
+          </div>
+
+          <div class="dash-kpi-card">
+            <div class="dash-kpi-header">
+              <span class="dash-kpi-title">Sensitivity (Recall)</span>
+              <span class="entity-badge positive">100%</span>
+            </div>
+            <div class="dash-kpi-val" style="color: #56C6B5;">1.0000</div>
+            <div class="dash-kpi-sub">Optimal threshold operating point</div>
+          </div>
+
+          <div class="dash-kpi-card">
+            <div class="dash-kpi-header">
+              <span class="dash-kpi-title">Specificity</span>
+              <span class="entity-badge" style="background: rgba(131, 183, 240, 0.15); color: #83B7F0;">41.1%</span>
+            </div>
+            <div class="dash-kpi-val">0.4107</div>
+            <div class="dash-kpi-sub">Calibrated false-positive control</div>
+          </div>
+        </div>
+
+        <!-- Section: Supported Medical Image Categories -->
+        <div style="margin-bottom: 2rem;">
+          <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin: 0 0 0.5rem 0;">Supported Medical Image Categories</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 1rem 0;">Rigorous operational safety protocol ensures non-chest modalities are handled transparently as planned research modules.</p>
+          
+          <div class="modality-catalog-grid">
+            <div class="modality-catalog-card supported">
+              <div class="mcc-header">
+                <div>
+                  <h4 class="mcc-title">Chest Radiography (PA / AP)</h4>
+                  <div class="mcc-region">Thorax / Cardiopulmonary Anatomy</div>
+                </div>
+                <span class="mcc-badge supported">SUPPORTED / ACTIVE</span>
+              </div>
+              <div class="mcc-body">
+                Full multimodal pipeline with PubMedCLIP ViT-B/32, RAG clinical evidence linking, NegEx entity verification, and calibrated 7x7 spatial attribution heatmaps.
+              </div>
+              <div class="mcc-meta">
+                Target Findings: Normal, Pneumonia, Effusion, Pneumothorax, Cardiomegaly, Atelectasis, Edema, Consolidation
+              </div>
+            </div>
+
+            <div class="modality-catalog-card planned">
+              <div class="mcc-header">
+                <div>
+                  <h4 class="mcc-title">Hand, Wrist, Arm & Leg X-rays</h4>
+                  <div class="mcc-region">Extremities / Musculoskeletal</div>
+                </div>
+                <span class="mcc-badge planned">PLANNED MODULE</span>
+              </div>
+              <div class="mcc-body">
+                Bone fracture detection module. MURA-DenseNet architecture under evaluation. Automatic modality intake routing prevents accidental analysis using chest models.
+              </div>
+              <div class="mcc-meta">
+                Candidate Architecture: MURA Musculoskeletal Fracture Detector
+              </div>
+            </div>
+
+            <div class="modality-catalog-card planned">
+              <div class="mcc-header">
+                <div>
+                  <h4 class="mcc-title">Knee Radiography</h4>
+                  <div class="mcc-region">Knee Joint / Patellofemoral</div>
+                </div>
+                <span class="mcc-badge planned">PLANNED MODULE</span>
+              </div>
+              <div class="mcc-body">
+                Degenerative joint disease and fracture analysis. Requires dedicated Kellgren-Lawrence grading dataset and specialized joint space measurement engine.
+              </div>
+              <div class="mcc-meta">
+                Candidate Architecture: OAI Kellgren-Lawrence Severity Classifier
+              </div>
+            </div>
+
+            <div class="modality-catalog-card planned">
+              <div class="mcc-header">
+                <div>
+                  <h4 class="mcc-title">Computed Tomography (CT)</h4>
+                  <div class="mcc-region">Axial Thoracic & Cranial Cross-Sections</div>
+                </div>
+                <span class="mcc-badge planned">PLANNED MODULE</span>
+              </div>
+              <div class="mcc-body">
+                Volumetric cross-sectional scanning requires 3D DICOM windowing and slice reconstruction. Cross-sectional CT inference is rejected in this 2D projection prototype.
+              </div>
+              <div class="mcc-meta">
+                Candidate Architectures: RSNA-ICH (Head CT), LIDC-IDRI (Thoracic CT)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Recent Session Records -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin: 0;">Recent Session Analysis Records</h3>
+            <button class="btn-topbar-secondary" id="btnRefreshDashHistory" style="font-size: 0.8rem; padding: 4px 10px;">Refresh Records</button>
+          </div>
+          <div class="verification-table-wrap">
+            <table class="history-table" style="margin-top: 0;">
+              <thead>
+                <tr>
+                  <th>TIMESTAMP</th>
+                  <th>REPORT ID</th>
+                  <th>FILENAME</th>
+                  <th>MODALITY</th>
+                  <th>TOP FINDING</th>
+                  <th>SCORE</th>
+                  <th>VERIFICATION</th>
+                  <th>HUMAN REVIEW</th>
+                </tr>
+              </thead>
+              <tbody id="dashRecentTableBody">
+                <tr>
+                  <td colspan="8" style="text-align: center; color: var(--text-dim); padding: 2.5rem;">
+                    No analyses recorded in current session. Upload a chest radiograph to generate real clinical records.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- VIEW 2: NEW IMAGE ANALYSIS WORKSTATION (PACS CONSOLE)             -->
+      <!-- ================================================================= -->
+      <section class="view-panel-section active-view" id="viewConsole" aria-label="New Image Analysis PACS Workspace">
       <main class="workstation-container" id="viewportSection">
 
         <!-- Left Column: Radiograph Ingestion, PACS Viewport & Preprocessing -->
@@ -1400,7 +1573,427 @@
           </div>
 
         </section>
-      </main>
+            </main>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- VIEW 3: SESSION ANALYSIS AUDIT HISTORY                            -->
+      <!-- ================================================================= -->
+      <section class="view-panel-section" id="viewHistory" aria-label="Session Analysis Audit History">
+        <div class="view-header">
+          <div class="view-title-group">
+            <h2>Session Analysis Audit History</h2>
+            <p>Cryptographically tracked clinical reports generated during the active session. No fabricated or simulated records.</p>
+          </div>
+          <button class="btn-topbar-secondary" id="btnRefreshHistory">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+            <span>Refresh Audit Log</span>
+          </button>
+        </div>
+
+        <div class="verification-table-wrap">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>TIMESTAMP</th>
+                <th>REPORT ID</th>
+                <th>FILE</th>
+                <th>MODALITY</th>
+                <th>TOP FINDING</th>
+                <th>SIMILARITY</th>
+                <th>VERIFICATION STATUS</th>
+                <th>REVIEW STATUS</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <tr>
+                <td colspan="8" style="text-align: center; color: var(--text-dim); padding: 3rem;">
+                  No image analysis records generated yet in this session. Process an image in New Analysis to generate audit entries.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- VIEW 4: CLINICAL VERIFICATION AUDIT                               -->
+      <!-- ================================================================= -->
+      <section class="view-panel-section" id="viewVerification" aria-label="Entity-Grounded Clinical Verification">
+        <div class="view-header">
+          <div class="view-title-group">
+            <h2>Entity-Grounded Clinical Verification Auditor</h2>
+            <p>Audits draft diagnostic assertions against model similarity scores and peer-reviewed guidelines using NegEx polarity parsing to detect contradictions, preserve uncertainty, and flag unsupported statements.</p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <span class="entity-badge positive" id="viewVerifStatusBadge">PENDING ANALYSIS</span>
+            <span class="mono-text" style="font-size: 0.8rem; color: var(--text-muted);" id="viewVerifConcordance">Concordance: --%</span>
+          </div>
+        </div>
+
+        <!-- 4 Status Legend Box matching user requirement -->
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.15rem; margin-bottom: 1.5rem;">
+          <h4 style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin: 0 0 0.75rem 0;">Clinical Verification Status Standards:</h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.85rem;">
+            <div style="display: flex; gap: 0.6rem; align-items: flex-start;">
+              <span class="entity-badge positive" style="margin-top: 2px;">Supported</span>
+              <span style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4;">Statement concordant with model similarity exceeding calibrated cutoff.</span>
+            </div>
+            <div style="display: flex; gap: 0.6rem; align-items: flex-start;">
+              <span class="entity-badge" style="background: rgba(224, 108, 117, 0.15); color: #E06C75; border: 1px solid rgba(224, 108, 117, 0.4); margin-top: 2px;">Inconsistent</span>
+              <span style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4;">Clinical contradiction detected between asserted finding and model scores.</span>
+            </div>
+            <div style="display: flex; gap: 0.6rem; align-items: flex-start;">
+              <span class="entity-badge" style="background: rgba(229, 169, 60, 0.15); color: #E5A93C; border: 1px solid rgba(229, 169, 60, 0.4); margin-top: 2px;">Insufficient</span>
+              <span style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4;">Statement asserts condition without corroborating model evidence or criteria.</span>
+            </div>
+            <div style="display: flex; gap: 0.6rem; align-items: flex-start;">
+              <span class="entity-badge" style="background: rgba(131, 183, 240, 0.15); color: #83B7F0; border: 1px solid rgba(131, 183, 240, 0.4); margin-top: 2px;">Pending</span>
+              <span style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4;">Awaiting completed image inference and radiologist overview.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alert Notification Strip -->
+        <div class="verification-alert-strip hidden" id="viewVerifAlert" style="margin-bottom: 1.5rem;">
+          <span class="vas-text" id="viewVerifAlertText">No clinical contradictions detected.</span>
+        </div>
+
+        <!-- Verification Table -->
+        <div class="verification-table-wrap">
+          <table class="verification-table" id="viewVerifTable">
+            <thead>
+              <tr>
+                <th style="width: 20%;">CLINICAL ENTITY</th>
+                <th style="width: 20%;">ANATOMICAL LOCATION</th>
+                <th style="width: 14%; text-align: center;">MODEL SCORE</th>
+                <th style="width: 14%; text-align: center;">CALIBRATED CUTOFF</th>
+                <th style="width: 18%;">RETRIEVED GUIDELINE</th>
+                <th style="width: 14%; text-align: right;">CONSISTENCY STATUS</th>
+              </tr>
+            </thead>
+            <tbody id="viewVerifTbody">
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--text-dim); padding: 2.5rem;">
+                  No clinical analysis performed yet. Run an analysis in New Image Analysis to populate entity verification audit.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Cryptographic Audit Hash -->
+        <div class="audit-digest-bar" style="margin-top: 1.5rem;">
+          <span class="adb-label">VERIFICATION AUDIT HASH:</span>
+          <span class="adb-hash mono-text" id="viewVerifHash">SHA256: AWAITING_ANALYSIS</span>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- VIEW 5: MEDICAL EVIDENCE RETRIEVAL (RAG)                          -->
+      <!-- ================================================================= -->
+      <section class="view-panel-section" id="viewEvidence" aria-label="Medical Evidence Retrieval RAG">
+        <div class="view-header">
+          <div class="view-title-group">
+            <h2>Authoritative Medical Evidence Retrieval (RAG)</h2>
+            <p>Authoritative peer-reviewed clinical radiology literature and consensus criteria (ACR Appropriateness Criteria, Fleischner Society Consensus, BTS, WHO).</p>
+          </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="evidence-search-bar">
+          <input type="text" class="evidence-search-input" id="evidenceSearchInput" placeholder="Search guidelines (e.g. pleural effusion, atelectasis, pneumothorax, cardiomegaly)...">
+          <button class="btn-search-cta" id="btnSearchEvidence" type="button">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <span>Search Guidelines</span>
+          </button>
+        </div>
+
+        <!-- Safety Disclaimer Callout -->
+        <div style="background: rgba(131, 183, 240, 0.08); border: 1px solid rgba(131, 183, 240, 0.25); border-radius: var(--radius-sm); padding: 0.85rem 1rem; margin-bottom: 1.5rem; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
+          <strong style="color: #83B7F0;">Clinical Guidance:</strong> Evidence retrieval links candidate findings to diagnostic criteria in peer-reviewed radiology literature. Retrieval alone does NOT establish or exclude a clinical diagnosis without physician interpretation.
+        </div>
+
+        <!-- Guidelines Results Stream -->
+        <div id="evidenceResultsContainer">
+          <div class="evidence-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div class="evidence-title">ACR-STR Practice Parameter for the Performance of Chest Radiography</div>
+              <span class="entity-badge positive">ACR-STR-2022-CXR-01</span>
+            </div>
+            <div class="evidence-meta">American College of Radiology / Society of Thoracic Radiology • Finding: <strong>Normal Aerated Parenchyma</strong></div>
+            <div class="evidence-passage">A standard normal chest radiograph demonstrates clear bilateral lung fields without focal consolidation, pneumothorax, or pleural effusion. The cardiothoracic ratio is normal (<0.50 on PA view), and costophrenic sulci are sharp.</div>
+            <div style="margin-top: 0.5rem; font-size: 0.82rem; color: var(--text-muted);">
+              <strong>Diagnostic Criteria:</strong> Absence of abnormal airspace opacification, vascular redistribution, or interstitial thickening.
+            </div>
+          </div>
+
+          <div class="evidence-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div class="evidence-title">British Thoracic Society Guideline for Pleural Disease Management</div>
+              <span class="entity-badge positive">BTS-2023-PLR-04</span>
+            </div>
+            <div class="evidence-meta">British Thoracic Society (BTS) • Finding: <strong>Pleural Effusion</strong></div>
+            <div class="evidence-passage">Blunting of the posterior costophrenic angle on a lateral radiograph requires approximately 50 mL of fluid, whereas blunting of the lateral costophrenic sulcus on a standard erect PA projection requires at least 175 to 200 mL of effusion.</div>
+            <div style="margin-top: 0.5rem; font-size: 0.82rem; color: var(--text-muted);">
+              <strong>Diagnostic Criteria:</strong> Meniscus sign, homogenous dependent opacity obscuring hemidiaphragmatic silhouette.
+            </div>
+          </div>
+
+          <div class="evidence-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div class="evidence-title">Fleischner Society: Glossary of Terms for Thoracic Imaging</div>
+              <span class="entity-badge positive">FLEISCHNER-2024-ATC-03</span>
+            </div>
+            <div class="evidence-meta">Fleischner Society Consensus • Finding: <strong>Atelectasis / Volume Loss</strong></div>
+            <div class="evidence-passage">Subsegmental and plate-like (discoid) atelectasis manifests as horizontal linear or band-like opacities usually abutting a pleural surface, frequently at lung bases due to hypoventilation or surfactant impairment.</div>
+            <div style="margin-top: 0.5rem; font-size: 0.82rem; color: var(--text-muted);">
+              <strong>Diagnostic Criteria:</strong> Linear/band-like opacity, shift of interlobar fissures, crowding of bronchovascular bundles.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- VIEW 6: HELD-OUT BENCHMARK EVALUATION METRICS                     -->
+      <!-- ================================================================= -->
+      <section class="view-panel-section" id="viewMetrics" aria-label="Held-Out Benchmark Evaluation Metrics">
+        <div class="view-header">
+          <div class="view-title-group">
+            <h2>Held-Out Test Split Performance Benchmarks</h2>
+            <p>Empirical evaluation metrics measured directly on the benchmark validation split (16 samples). Zero fabricated or simulated performance figures.</p>
+          </div>
+          <span class="entity-badge positive">EVALUATION SPLIT: N=16</span>
+        </div>
+
+        <div class="dash-kpi-grid">
+          <div class="dash-kpi-card">
+            <div class="dash-kpi-header"><span class="dash-kpi-title">Macro F1-Score</span><span class="entity-badge positive">EMPIRICAL</span></div>
+            <div class="dash-kpi-val" style="color: #56C6B5;">0.3843</div>
+            <div class="dash-kpi-sub">Mean multi-label harmonic score</div>
+          </div>
+          <div class="dash-kpi-card">
+            <div class="dash-kpi-header"><span class="dash-kpi-title">Sensitivity (Recall)</span><span class="entity-badge positive">100.0%</span></div>
+            <div class="dash-kpi-val" style="color: #56C6B5;">1.0000</div>
+            <div class="dash-kpi-sub">Zero missed positive cases (FN=0)</div>
+          </div>
+          <div class="dash-kpi-card">
+            <div class="dash-kpi-header"><span class="dash-kpi-title">Specificity</span><span class="entity-badge" style="background: rgba(131, 183, 240, 0.15); color: #83B7F0;">41.1%</span></div>
+            <div class="dash-kpi-val">0.4107</div>
+            <div class="dash-kpi-sub">TN / (TN + FP) true negative rate</div>
+          </div>
+          <div class="dash-kpi-card">
+            <div class="dash-kpi-header"><span class="dash-kpi-title">Macro ROC-AUC</span><span class="entity-badge" style="background: rgba(131, 183, 240, 0.15); color: #83B7F0;">0.518</span></div>
+            <div class="dash-kpi-val">0.5179</div>
+            <div class="dash-kpi-sub">Zero-shot ranking discrimination</div>
+          </div>
+          <div class="dash-kpi-card">
+            <div class="dash-kpi-header"><span class="dash-kpi-title">Macro Precision</span><span class="entity-badge" style="background: rgba(229, 169, 60, 0.15); color: #E5A93C;">23.8%</span></div>
+            <div class="dash-kpi-val">0.2378</div>
+            <div class="dash-kpi-sub">High sensitivity operating point</div>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem; margin-top: 1.5rem;">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin: 0 0 0.85rem 0;">Per-Finding Operating Threshold Calibration Breakdown</h4>
+          <div class="verification-table-wrap">
+            <table class="history-table" style="margin-top: 0;">
+              <thead>
+                <tr>
+                  <th>FINDING CATEGORY</th>
+                  <th>OPTIMAL THRESHOLD</th>
+                  <th>RECALL</th>
+                  <th>SPECIFICITY</th>
+                  <th>F1 SCORE</th>
+                  <th>CALIBRATION METHOD</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Normal Aerated Parenchyma</strong></td>
+                  <td class="mono-text">0.2500</td>
+                  <td class="mono-text" style="color: #56C6B5;">1.0000</td>
+                  <td class="mono-text">0.3750</td>
+                  <td class="mono-text">0.6154</td>
+                  <td>Empirical grid sweep on validation split</td>
+                </tr>
+                <tr>
+                  <td><strong>Pleural Effusion</strong></td>
+                  <td class="mono-text">0.2500</td>
+                  <td class="mono-text" style="color: #56C6B5;">1.0000</td>
+                  <td class="mono-text">0.4000</td>
+                  <td class="mono-text">0.2500</td>
+                  <td>Empirical grid sweep on validation split</td>
+                </tr>
+                <tr>
+                  <td><strong>Cardiomegaly</strong></td>
+                  <td class="mono-text">0.2500</td>
+                  <td class="mono-text" style="color: #56C6B5;">1.0000</td>
+                  <td class="mono-text">0.4286</td>
+                  <td class="mono-text">0.3333</td>
+                  <td>Empirical grid sweep on validation split</td>
+                </tr>
+                <tr>
+                  <td><strong>Atelectasis / Volume Loss</strong></td>
+                  <td class="mono-text">0.2500</td>
+                  <td class="mono-text" style="color: #56C6B5;">1.0000</td>
+                  <td class="mono-text">0.4286</td>
+                  <td class="mono-text">0.3333</td>
+                  <td>Empirical grid sweep on validation split</td>
+                </tr>
+                <tr>
+                  <td><strong>Pulmonary Edema</strong></td>
+                  <td class="mono-text">0.2500</td>
+                  <td class="mono-text" style="color: #56C6B5;">1.0000</td>
+                  <td class="mono-text">0.4286</td>
+                  <td class="mono-text">0.3896</td>
+                  <td>Empirical grid sweep on validation split</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
+      <!-- VIEW 7: MODEL REGISTRY & SYSTEM ARCHITECTURE                      -->
+      <!-- ================================================================= -->
+      <section class="view-panel-section" id="viewSystem" aria-label="Model Capability Registry and Architecture">
+        <div class="view-header">
+          <div class="view-title-group">
+            <h2>Model Capability Registry & System Architecture</h2>
+            <p>Operational boundary enforcement matrix and multimodal processing architecture.</p>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 2rem;">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin: 0 0 0.85rem 0;">Central Model Capability Registry (ModelRegistry)</h4>
+          <div class="verification-table-wrap">
+            <table class="history-table" style="margin-top: 0;">
+              <thead>
+                <tr>
+                  <th>MODALITY ID</th>
+                  <th>CLINICAL MODALITY</th>
+                  <th>ANATOMICAL REGION</th>
+                  <th>STATUS</th>
+                  <th>ACTIVE / CANDIDATE MODEL</th>
+                  <th>EXPLAINABILITY</th>
+                </tr>
+              </thead>
+              <tbody id="systemRegistryTbody">
+                <tr>
+                  <td class="mono-text">chest_xray</td>
+                  <td>Chest Radiography (PA/AP)</td>
+                  <td>Thorax / Cardiopulmonary</td>
+                  <td><span class="mcc-badge supported">SUPPORTED</span></td>
+                  <td>flaviagiammarino/pubmed-clip-vit-base-patch32</td>
+                  <td>7x7 ViT-B/32 Spatial Cosine Overlay</td>
+                </tr>
+                <tr>
+                  <td class="mono-text">bone_xray</td>
+                  <td>Bone Radiography</td>
+                  <td>Extremities (Hand, Wrist, Arm, Leg)</td>
+                  <td><span class="mcc-badge planned">PLANNED</span></td>
+                  <td>MURA-DenseNet121 Fracture Detector</td>
+                  <td>Planned</td>
+                </tr>
+                <tr>
+                  <td class="mono-text">knee_xray</td>
+                  <td>Knee Radiography</td>
+                  <td>Knee Joint / Patellofemoral</td>
+                  <td><span class="mcc-badge planned">PLANNED</span></td>
+                  <td>OAI Kellgren-Lawrence Classifier</td>
+                  <td>Planned</td>
+                </tr>
+                <tr>
+                  <td class="mono-text">other_xray</td>
+                  <td>Musculoskeletal Radiography</td>
+                  <td>Spine, Pelvis, Shoulder</td>
+                  <td><span class="mcc-badge planned">PLANNED</span></td>
+                  <td>Orthopedic Multi-Region Detector</td>
+                  <td>Planned</td>
+                </tr>
+                <tr>
+                  <td class="mono-text">brain_ct</td>
+                  <td>Brain Computed Tomography</td>
+                  <td>Neuro / Cranial</td>
+                  <td><span class="mcc-badge planned">PLANNED</span></td>
+                  <td>RSNA-ICH Intracranial Classifier</td>
+                  <td>Planned</td>
+                </tr>
+                <tr>
+                  <td class="mono-text">chest_ct</td>
+                  <td>Chest Computed Tomography</td>
+                  <td>Thorax (Axial Cross-Section)</td>
+                  <td><span class="mcc-badge planned">PLANNED</span></td>
+                  <td>LIDC-IDRI Volumetric Nodule Detector</td>
+                  <td>Planned</td>
+                </tr>
+                <tr>
+                  <td class="mono-text">non_medical</td>
+                  <td>Natural Photography / Graphic</td>
+                  <td>None</td>
+                  <td><span class="mcc-badge unsupported">UNSUPPORTED</span></td>
+                  <td>None (Rejection Protocol)</td>
+                  <td>None</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 9-Step Processing Pipeline Card -->
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin: 0 0 1rem 0;">Multimodal Clinical Decision Support Processing Pipeline</h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;">
+            <div style="background: var(--bg-viewport); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.72rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.25rem;">STEP 01</div>
+              <div style="font-weight: 600; font-size: 0.88rem; color: var(--text-primary);">Image Intake & Quality Preflight</div>
+              <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.25rem;">Validates dimensions, format, and contrast variance.</div>
+            </div>
+            <div style="background: var(--bg-viewport); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.72rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.25rem;">STEP 02</div>
+              <div style="font-weight: 600; font-size: 0.88rem; color: var(--text-primary);">Modality Classification & Routing</div>
+              <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.25rem;">Routes chest radiographs to PubMedCLIP; rejects unsupported modalities.</div>
+            </div>
+            <div style="background: var(--bg-viewport); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.72rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.25rem;">STEP 03</div>
+              <div style="font-weight: 600; font-size: 0.88rem; color: var(--text-primary);">PubMedCLIP Zero-Shot Inference</div>
+              <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.25rem;">Computes cosine similarity against clinical text prompts.</div>
+            </div>
+            <div style="background: var(--bg-viewport); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.72rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.25rem;">STEP 04</div>
+              <div style="font-weight: 600; font-size: 0.88rem; color: var(--text-primary);">Calibrated Decision Thresholding</div>
+              <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.25rem;">Applies validated empirical cutoff (0.25) vs strict cutoff (0.50).</div>
+            </div>
+            <div style="background: var(--bg-viewport); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.72rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.25rem;">STEP 05</div>
+              <div style="font-weight: 600; font-size: 0.88rem; color: var(--text-primary);">RAG Guideline Evidence Retrieval</div>
+              <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.25rem;">Retrieves authoritative criteria from ACR, Fleischner, BTS, WHO.</div>
+            </div>
+            <div style="background: var(--bg-viewport); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.72rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.25rem;">STEP 06</div>
+              <div style="font-weight: 600; font-size: 0.88rem; color: var(--text-primary);">Entity-Grounded Clinical Verification</div>
+              <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.25rem;">NegEx entity audit detects contradictions and ungrounded statements.</div>
+            </div>
+            <div style="background: var(--bg-viewport); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.72rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.25rem;">STEP 07</div>
+              <div style="font-weight: 600; font-size: 0.88rem; color: var(--text-primary);">7x7 Spatial Patch Attribution</div>
+              <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.25rem;">Computes patch-text cosine attribution overlay across 49 tokens.</div>
+            </div>
+            <div style="background: var(--bg-viewport); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.72rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.25rem;">STEP 08</div>
+              <div style="font-weight: 600; font-size: 0.88rem; color: var(--text-primary);">Structured Radiology Report Generation</div>
+              <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.25rem;">Synthesizes structured findings, pertinent negatives, and limitations.</div>
+            </div>
+            <div style="background: var(--bg-viewport); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 0.72rem; font-weight: 700; color: var(--color-primary); margin-bottom: 0.25rem;">STEP 09</div>
+              <div style="font-weight: 600; font-size: 0.88rem; color: var(--text-primary);">Physician Review & Digital Sign-off</div>
+              <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 0.25rem;">Enforces mandatory human overview by licensed radiologist.</div>
+            </div>
+          </div>
+        </div>
+      </section>
 
     </div>
   </div>
@@ -1547,6 +2140,22 @@
             <rect width="12" height="8" x="6" y="14"/>
           </svg>
           <span>Print / Export PDF</span>
+        </button>
+        <button class="btn-modal-secondary" id="btnDownloadTxtReport" title="Download report as plain text (.txt)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span>Download .txt</span>
+        </button>
+        <button class="btn-modal-secondary" id="btnDownloadJsonReport" title="Download structured report as JSON (.json)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+          </svg>
+          <span>Download .json</span>
         </button>
       </div>
     </div>

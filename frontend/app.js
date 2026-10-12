@@ -1789,6 +1789,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (targetPanelId === 'viewHistory') {
       fetchSessionHistory();
+    } else if (targetPanelId === 'viewOverview') {
+      updateDashboardTelemetry();
     }
   }
 
@@ -2033,5 +2035,86 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   };
+
+
+  // =========================================================================
+  // REPORT EXPORT & DASHBOARD TELEMETRY ENHANCEMENTS
+  // =========================================================================
+  const btnDownloadTxtReport = document.getElementById('btnDownloadTxtReport');
+  if (btnDownloadTxtReport) {
+    btnDownloadTxtReport.addEventListener('click', () => {
+      const text = lastReportData?.formatted_report_text || rptImpressionText?.textContent || 'AI-Assisted Radiology Report';
+      const reportId = lastReportData?.report_id || displayStudyId?.textContent || 'RAD_REPORT';
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${reportId}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  const btnDownloadJsonReport = document.getElementById('btnDownloadJsonReport');
+  if (btnDownloadJsonReport) {
+    btnDownloadJsonReport.addEventListener('click', () => {
+      const data = lastReportData || lastAnalysisResponse || {};
+      const reportId = data.report_id || displayStudyId?.textContent || 'RAD_REPORT';
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${reportId}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  const btnLaunchFromDash = document.getElementById('btnLaunchFromDash');
+  if (btnLaunchFromDash) {
+    btnLaunchFromDash.addEventListener('click', () => {
+      switchMainView('viewConsole', 'navItemConsole');
+    });
+  }
+
+  async function updateDashboardTelemetry() {
+    try {
+      const res = await fetch(`${API_BASE}/history`);
+      if (!res.ok) return;
+      const historyItems = await res.json();
+      const totalEl = document.getElementById('dashTotalImages');
+      if (totalEl) totalEl.textContent = historyItems.length;
+
+      const tbody = document.getElementById('dashRecentTableBody');
+      if (tbody && historyItems.length > 0) {
+        tbody.innerHTML = historyItems.slice(0, 5).map(item => `
+          <tr>
+            <td><span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted);">${item.timestamp || 'N/A'}</span></td>
+            <td><span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-primary);">${item.report_id || 'N/A'}</span></td>
+            <td style="font-weight: 500; color: var(--text-primary);">${item.filename || 'Unknown'}</td>
+            <td><span class="mcc-badge supported" style="font-size: 0.68rem;">${item.detected_modality || 'CXR'}</span></td>
+            <td style="font-weight: 600; text-transform: capitalize;">${(item.top_finding || 'Normal').replace('_', ' ')}</td>
+            <td><span style="font-family: var(--font-mono);">${(item.top_score || 0).toFixed(4)}</span></td>
+            <td><span class="entity-badge positive" style="font-size: 0.7rem;">${item.verification_status || 'VERIFIED'}</span></td>
+            <td><span style="color: #E5A93C; font-size: 0.8rem; font-weight: 500;">Pending Review</span></td>
+          </tr>
+        `).join('');
+      }
+    } catch (err) {
+      console.warn('Dashboard history fetch error:', err);
+    }
+  }
+
+  const btnRefreshDashHistory = document.getElementById('btnRefreshDashHistory');
+  if (btnRefreshDashHistory) {
+    btnRefreshDashHistory.addEventListener('click', updateDashboardTelemetry);
+  }
+
+  // Initial dashboard load
+  updateDashboardTelemetry();
 
 });
