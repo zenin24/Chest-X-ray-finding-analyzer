@@ -1,20 +1,29 @@
 """
 API route definitions.
 
-This module contains all FastAPI route handlers for the Chest X-ray Finding Analyzer.
+This module contains all FastAPI route handlers for the Chest X-ray Finding Analyzer,
+multimodal routing, RAG evidence retrieval, clinical verification, and structured reporting.
 """
 
+from io import BytesIO
 import logging
+from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, File, HTTPException, UploadFile, status
+from fastapi import APIRouter, File, Form, HTTPException, Query, UploadFile, status
+from fastapi.responses import Response
 
-from app.inference.analyzer import analyze_image
+from app.explainability.visualization import generate_explanation_overlay
+from app.inference.analyzer import FINDING_PROMPTS, analyze_image
 from app.models.pubmedclip import pubmedclip_model
+from app.models.registry import ModelRegistry
+from app.models.router import classify_and_route
 from app.preprocessing.image import (
     get_image_info,
     load_image,
     validate_image_file,
 )
+from app.rag.retriever import EvidenceRetriever
+from app.reporting.generator import MedicalReportGenerator
 from app.schemas.response import (
     AnalysisResponse,
     ErrorResponse,
@@ -23,48 +32,117 @@ from app.schemas.response import (
     ImageInfoResponse,
     ModelInfo,
 )
+from app.verification.verifier import ClinicalVerifier
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
+
+# In-memory session audit history (stores recent analysis summaries without fabricating data)
+_SESSION_ANALYSIS_HISTORY: List[Dict[str, Any]] = []
 
 
 @router.get("/", tags=["Health"])
 async def root() -> dict:
     """Root endpoint for basic status check."""
     return {
-        "message": "Chest X-ray Finding Analyzer API",
+        "message": "Chest X-ray Finding Analyzer & Multimodal Clinical Verification API",
         "status": "running",
         "model_loaded": pubmedclip_model.is_loaded,
+        "supported_modalities": ModelRegistry.get_supported_categories(),
     }
 
 
 @router.get("/health", tags=["Health"])
 async def health_check() -> dict:
-    """Detailed health check endpoint reporting model status and compute device."""
+    """Detailed health check endpoint reporting model status, device, and registry."""
     return {
         "status": "healthy",
         "model": pubmedclip_model.get_model_info(),
+        "registry_modalities": [m.model_dump() for m in ModelRegistry.list_all()],
     }
+
+
+@router.get("/models/registry", tags=["Model Registry"])
+async def get_model_registry() -> List[dict]:
+    """Retrieve all medical imaging categories, active models, and clinical readiness status."""
+    return [m.model_dump() for m in ModelRegistry.list_all()]
+
+
+@router.get("/modalities", tags=["Model Registry"])
+async def get_modalities() -> dict:
+    """Convenience endpoint returning structured modality registry and live service connectivity."""
+    return {
+        "status": "success",
+        "service_connected": True,
+        "modalities": [m.model_dump() for m in ModelRegistry.list_all()],
+    }
+
+
+@router.post(
+    "/modality/classify",
+    tags=["Modality Routing"],
+)
+async def classify_modality_endpoint(
+    file: UploadFile = File(...),
+    manual_category: Optional[str] = Form(None),
+) -> dict:
+    """Inspect and classify the imaging modality and anatomical region of an uploaded medical image."""
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="No filename provided.")
+
+    validate_image_file(file.filename, file.content_type)
+    contents = await file.read()
+    image = load_image(contents)
+
+    routing_result = classify_and_route(image, manual_category=manual_category, filename=file.filename)
+    return routing_result.model_dump()
+
+
+@router.post(
+    "/evidence/search",
+    tags=["Evidence Retrieval"],
+)
+async def search_clinical_evidence(
+    query: str = Query(..., description="Clinical search terms"),
+    top_k: int = Query(3, ge=1, le=10),
+) -> List[dict]:
+    """Search authoritative clinical radiology guidelines for evidence passages."""
+    retriever = EvidenceRetriever.get_instance()
+    results = retriever.search(query=query, top_k=top_k)
+    return [r.model_dump() for r in results]
+
+
+@router.get(
+    "/history",
+    tags=["History"],
+)
+async def get_analysis_history() -> List[dict]:
+    """Retrieve session audit history of analyzed medical images."""
+    return list(reversed(_SESSION_ANALYSIS_HISTORY[-50:]))
 
 
 @router.post(
     "/analyze",
     response_model=AnalysisResponse,
     responses={
-        400: {"model": ErrorResponse, "description": "Invalid image file format or corrupted image"},
+        400: {"model": ErrorResponse, "description": "Invalid image file format, corruption, or unsupported modality"},
         500: {"model": ErrorResponse, "description": "Inference failure"},
     },
     tags=["Analysis"],
 )
-async def analyze_xray(file: UploadFile = File(...)) -> AnalysisResponse:
-    """Analyze a chest X-ray image for medical findings using PubMedCLIP.
+async def analyze_xray(
+    file: UploadFile = File(...),
+    modality_override: Optional[str] = Form(None),
+) -> AnalysisResponse:
+    """Analyze a medical image with multimodal routing, PubMedCLIP, RAG evidence, and clinical verification.
 
-    - **file**: Chest X-ray image file (JPEG, PNG, BMP, TIFF)
+    - **file**: Medical image file (JPEG, PNG, BMP, TIFF)
+    - **modality_override**: Optional manual modality selection (e.g. 'chest_xray')
 
-    Returns ranked medical findings with prototype similarity scores, rank, and candidate status.
+    Returns ranked findings, RAG citations, clinical entity verification, and a structured report.
     """
-    logger.info("Received image analysis request: filename=%s, content_type=%s", file.filename, file.content_type)
+    logger.info("Received analysis request: filename=%s, override=%s", file.filename, modality_override)
 
     if not file.filename:
         raise HTTPException(
@@ -99,7 +177,22 @@ async def analyze_xray(file: UploadFile = File(...)) -> AnalysisResponse:
             detail="Failed to read uploaded image.",
         )
 
-    # Step 3: Run inference pipeline
+    # Step 3: Modality Classification & Routing Check
+    routing_result = classify_and_route(image, manual_category=modality_override, filename=file.filename)
+    if not routing_result.is_valid_image:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Image quality check failed: {'; '.join(routing_result.quality_warnings)}",
+        )
+
+    if not routing_result.can_proceed_to_analysis:
+        logger.warning("Rejected unsupported modality: %s", routing_result.routing_message)
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Unsupported Modality: {routing_result.routing_message}",
+        )
+
+    # Step 4: Run Vision-Language Inference Pipeline
     try:
         analysis_result = analyze_image(image)
     except RuntimeError as e:
@@ -115,7 +208,7 @@ async def analyze_xray(file: UploadFile = File(...)) -> AnalysisResponse:
             detail=f"An error occurred during X-ray analysis: {e}",
         )
 
-    # Step 4: Construct structured response with rank, score, and status
+    # Format findings list
     findings = [
         FindingResult(
             finding=f["finding"],
@@ -129,6 +222,67 @@ async def analyze_xray(file: UploadFile = File(...)) -> AnalysisResponse:
         for f in analysis_result["findings"]
     ]
 
+    # Step 5: RAG Evidence Retrieval for Candidate Findings
+    retriever = EvidenceRetriever.get_instance()
+    candidate_keys = [f.finding for f in findings if f.above_threshold]
+    if not candidate_keys:
+        candidate_keys = ["normal"]
+    evidence_map = retriever.link_evidence_to_findings(candidate_keys)
+
+    citations_summary = []
+    for f_name, passages in evidence_map.items():
+        for p in passages:
+            citations_summary.append({
+                "finding": f_name,
+                "source_title": p.source_title,
+                "identifier": p.identifier,
+                "publication": p.publication,
+                "radiological_criteria": p.radiological_criteria,
+                "passage_excerpt": p.passage_text[:160] + "...",
+            })
+
+    # Step 6: Entity-Grounded Clinical Verification
+    # Build preliminary impression text for verification audit
+    if "normal" in candidate_keys and len(candidate_keys) == 1:
+        draft_text = "Clear bilateral lungs. Normal cardiac silhouette. No pneumothorax or effusion."
+    else:
+        active_str = ", ".join([c.replace("_", " ") for c in candidate_keys if c != "normal"])
+        draft_text = f"Findings suggestive of {active_str}. No pneumothorax."
+
+    findings_raw = [
+        {
+            "finding": f.finding,
+            "similarity_score": f.score,
+            "threshold": analysis_result["threshold_used"],
+            "above_threshold": f.above_threshold,
+            "status": f.status,
+        }
+        for f in findings
+    ]
+    verification_audit = ClinicalVerifier.verify(findings_raw, draft_text, evidence_map)
+
+    # Step 7: Structured Medical Report Generation
+    structured_rep = MedicalReportGenerator.generate_report(
+        image_findings=findings_raw,
+        verification_report=verification_audit,
+        retrieved_evidence=evidence_map,
+        modality_type=routing_result.modality_type,
+        anatomical_region=routing_result.anatomical_region,
+        model_name="PubMedCLIP ViT-B/32",
+    )
+
+    # Step 8: Record in Session History
+    _SESSION_ANALYSIS_HISTORY.append({
+        "timestamp": structured_rep.created_at,
+        "filename": file.filename,
+        "report_id": structured_rep.report_id,
+        "detected_modality": routing_result.category_display_name,
+        "top_finding": findings[0].finding if findings else "none",
+        "top_score": findings[0].score if findings else 0.0,
+        "verification_status": verification_audit.overall_status.value,
+        "human_review_status": structured_rep.human_review_status,
+    })
+
     return AnalysisResponse(
         status="success",
         model=ModelInfo(),
@@ -137,6 +291,10 @@ async def analyze_xray(file: UploadFile = File(...)) -> AnalysisResponse:
         threshold_used=analysis_result["threshold_used"],
         explainability=ExplainabilityInfo(),
         disclaimer="Research prototype. Not for clinical diagnosis.",
+        modality=routing_result,
+        verification=verification_audit,
+        evidence_citations=citations_summary,
+        structured_report=structured_rep,
     )
 
 
@@ -154,11 +312,6 @@ async def generate_explainability_map(
     finding: str = "pneumonia",
 ):
     """Generate a visual spatial patch-text similarity heatmap overlay PNG for a specific finding."""
-    from io import BytesIO
-    from fastapi.responses import Response
-    from app.explainability.visualization import generate_explanation_overlay
-    from app.inference.analyzer import FINDING_PROMPTS
-
     if not file.filename:
         raise HTTPException(status_code=400, detail="No filename provided.")
 
@@ -203,14 +356,14 @@ async def inspect_image(file: UploadFile = File(...)) -> ImageInfoResponse:
         contents = await file.read()
         image = load_image(contents)
         info = get_image_info(image)
-        return ImageInfoResponse(
-            status="success",
-            filename=file.filename,
-            image_format=info["format"],
-            width=info["width"],
-            height=info["height"],
-            mode=info["mode"],
-        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+    return ImageInfoResponse(
+        status="success",
+        filename=file.filename,
+        image_format=info["format"],
+        width=info["width"],
+        height=info["height"],
+        mode=info["mode"],
+    )

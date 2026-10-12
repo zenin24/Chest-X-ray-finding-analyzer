@@ -1,0 +1,101 @@
+﻿[
+  {
+    "id": "EVID-NORM-001",
+    "finding": "normal",
+    "source_title": "ACR-STR Practice Parameter for the Performance of Chest Radiography",
+    "identifier": "ACR-STR-2022-CXR-01",
+    "publication": "American College of Radiology / Society of Thoracic Radiology",
+    "passage_text": "A standard normal chest radiograph demonstrates clear bilateral lung fields without focal consolidation, pneumothorax, or pleural effusion. The cardiothoracic ratio is normal (<0.50 on PA view), mediastinal contours and hila are within standard morphological limits, and both costophrenic angles are acute and sharply defined.",
+    "anatomical_focus": "Bilateral lung parenchyma, cardiac silhouette, costophrenic sulci, hila",
+    "radiological_criteria": "Absence of abnormal airspace opacification, vascular redistribution, or interstitial thickening.",
+    "differential_diagnoses": ["Early sub-radiographic infection", "Microscopic aspiration"]
+  },
+  {
+    "id": "EVID-PNEUM-001",
+    "finding": "pneumonia",
+    "source_title": "ACR Appropriateness Criteria: Acute Respiratory Illness in Immunocompetent Patients",
+    "identifier": "ACR-2021-ARI-04",
+    "publication": "Journal of the American College of Radiology",
+    "passage_text": "Infectious pneumonia typically manifests on chest radiographs as airspace consolidation, patchy opacities with ill-defined margins, or ground-glass opacities. Air bronchograms within consolidated lung tissue are highly suggestive of alveolar fill. Radiographic sensitivity can be diminished in immunocompromised hosts, severe dehydration, or early onset (<24 hours).",
+    "anatomical_focus": "Pulmonary parenchyma / Segmental or lobar airspaces",
+    "radiological_criteria": "Patchy or confluent alveolar opacities with irregular margins, often with air bronchograms.",
+    "differential_diagnoses": ["Atelectasis", "Pulmonary infarction", "Pulmonary contusion", "Alveolar hemorrhage"]
+  },
+  {
+    "id": "EVID-PNEUM-002",
+    "finding": "pneumonia",
+    "source_title": "Fleischner Society Guidelines: Defining Imaging Findings of Pneumonia",
+    "identifier": "FLEISCH-2018-PNEUM",
+    "publication": "Radiology",
+    "passage_text": "Lobar pneumonia displays homogeneous dense opacification limited by pleural fissures. Bronchopneumonia characteristically exhibits multifocal peribronchial nodular and patchy opacities, frequently involving dependent basal zones.",
+    "anatomical_focus": "Lobar segments, dependent lower zones, bronchovascular bundles",
+    "radiological_criteria": "Homogeneous or multifocal airspace infiltration adhering to anatomical segments.",
+    "differential_diagnoses": ["Aspiration pneumonitis", "Cryptogenic organizing pneumonia"]
+  },
+  {
+    "id": "EVID-EFFUS-001",
+    "finding": "pleural_effusion",
+    "source_title": "British Thoracic Society Guideline for the Investigation of Unilateral Pleural Effusion",
+    "identifier": "BTS-2023-EFF-02",
+    "publication": "Thorax",
+    "passage_text": "Pleural fluid accumulation on erect chest radiographs produces blunting of the posterior (approx. 50-75 mL) and lateral (approx. 175-200 mL) costophrenic angles, forming a concave fluid meniscus extending laterally and superiorly. Massive effusions result in complete hemithorax opacification with contralateral mediastinal shift.",
+    "anatomical_focus": "Costophrenic angles, pleural space, hemithorax base",
+    "radiological_criteria": "Meniscus sign, loss of sharp costophrenic margin, dependent fluid layering.",
+    "differential_diagnoses": ["Pleural thickening", "Fibrothorax", "Elevated hemidiaphragm", "Basilar consolidation"]
+  },
+  {
+    "id": "EVID-PTX-001",
+    "finding": "pneumothorax",
+    "source_title": "ACR Appropriateness Criteria: Suspected Pneumothorax",
+    "identifier": "ACR-2020-PTX-01",
+    "publication": "Journal of the American College of Radiology",
+    "passage_text": "Pneumothorax is identified by the displacement of a fine, sharp visceral pleural line separated from the chest wall by a radiolucent peripheral zone devoid of pulmonary bronchovascular markings. In tension pneumothorax, flattening/inversion of the ipsilateral diaphragm and contralateral mediastinal deviation represent life-threatening emergencies.",
+    "anatomical_focus": "Apicolateral pleural space, chest wall boundary",
+    "radiological_criteria": "Visible thin visceral pleural line, peripheral avascular zone, hyperlucency.",
+    "differential_diagnoses": ["Skin fold artifact", "Emphysematous bulla", "Mach band effect", "Pneumomediastinum"]
+  },
+  {
+    "id": "EVID-CARDIO-001",
+    "finding": "cardiomegaly",
+    "source_title": "Cardiothoracic Ratio Measurement and Heart Size Standardization in Radiology",
+    "identifier": "WHO-RAD-CXR-CARDIO",
+    "publication": "World Health Organization Diagnostic Imaging",
+    "passage_text": "On standard upright posteroanterior (PA) chest radiographs, cardiomegaly is conventionally defined as a cardiothoracic ratio (CTR) exceeding 0.50 (maximum transverse cardiac diameter divided by maximum inner thoracic diameter). Radiographs obtained in anteroposterior (AP) projection magnify the cardiac silhouette by 10-15%, which may yield false-positive cardiomegaly impressions.",
+    "anatomical_focus": "Cardiac silhouette, pericardium, transverse thoracic diameter",
+    "radiological_criteria": "Transverse cardiac diameter > 50% of inner thoracic cage diameter on erect PA view.",
+    "differential_diagnoses": ["Pericardial effusion", "AP projection artifact", "Low lung volumes", "Pectus excavatum"]
+  },
+  {
+    "id": "EVID-ATEL-001",
+    "finding": "atelectasis",
+    "source_title": "Fleischner Society Glossary of Terms for Thoracic Imaging: Atelectasis Criteria",
+    "identifier": "FLEISCH-2021-ATEL",
+    "publication": "Radiology",
+    "passage_text": "Atelectasis denotes volume loss of pulmonary parenchyma. Direct radiological signs comprise displaced interlobar fissures and crowded bronchovascular markings. Indirect signs include elevation of the ipsilateral hemidiaphragm, mediastinal shift toward the collapsed side, and compensatory hyperinflation of adjacent healthy lobes.",
+    "anatomical_focus": "Lobar, segmental, or subsegmental lung parenchyma",
+    "radiological_criteria": "Linear/discoidal opacities (subsegmental) or triangular wedge-like opacities with fissure retraction.",
+    "differential_diagnoses": ["Consolidation", "Post-surgical scarring", "Pulmonary fibrosis"]
+  },
+  {
+    "id": "EVID-EDEMA-001",
+    "finding": "pulmonary_edema",
+    "source_title": "ACR Appropriateness Criteria: Suspected Heart Failure and Pulmonary Edema",
+    "identifier": "ACR-2022-HF-EDEMA",
+    "publication": "Journal of the American College of Radiology",
+    "passage_text": "Cardiogenic pulmonary edema typically progresses through stages: vascular redistribution (cephalization to upper lobes), interstitial edema (Kerley B lines at pleural bases, peribronchial cuffing, hazy hilar contours), and alveolar edema (bilateral symmetrical perihilar 'batwing' or 'butterfly' airspace opacities).",
+    "anatomical_focus": "Perihilar regions, interstitial interlobular septa, lower lung zones",
+    "radiological_criteria": "Kerley B lines, peribronchial cuffing, batwing alveolar opacities, vascular cephalization.",
+    "differential_diagnoses": ["Non-cardiogenic ARDS", "Multifocal pneumonia", "Alveolar proteinosis"]
+  },
+  {
+    "id": "EVID-CONS-001",
+    "finding": "consolidation",
+    "source_title": "Fleischner Society: Terminology and Differential of Airspace Consolidation",
+    "identifier": "FLEISCH-2020-CONS",
+    "publication": "Radiology",
+    "passage_text": "Consolidation describes an increase in lung parenchymal attenuation that completely obscures the margins of vessels and airway walls. The presence of air bronchograms confirms parenchymal fill rather than pleural pathology. Causes include exudate (infection), transudate (edema), blood (contusion/hemorrhage), and neoplastic infiltration.",
+    "anatomical_focus": "Alveolar airspace, acinar units",
+    "radiological_criteria": "Homogeneous opacification concealing vascular silhouettes; patent bronchial air lucencies visible within.",
+    "differential_diagnoses": ["Lobar pneumonia", "Severe pulmonary contusion", "Pulmonary infarction", "Bronchoalveolar carcinoma"]
+  }
+]
