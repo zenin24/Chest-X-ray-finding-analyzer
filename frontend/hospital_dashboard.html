@@ -1,0 +1,1587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>General Hospital — Operations & Management Console</title>
+  
+  <!-- Clean Human Healthcare Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       HEALTHCARE DESIGN SYSTEM: CLEAN, HUMAN, SOFT PASTEL BLUE & MINT GREEN
+       ========================================================================== */
+    :root {
+      /* Base canvas & neutrals */
+      --bg-canvas: #f8fafc;
+      --bg-card: #ffffff;
+      --border-subtle: #edf2f7;
+      --border-hover: #e2e8f0;
+
+      /* Primary Pastel Blue Palette */
+      --blue-50: #f0f7ff;
+      --blue-100: #e0f0fe;
+      --blue-200: #bae0fd;
+      --blue-500: #0284c7;
+      --blue-600: #0369a1;
+      --blue-700: #075985;
+
+      /* Primary Pastel Mint Green Palette */
+      --mint-50: #f0fdf4;
+      --mint-100: #dcfce7;
+      --mint-200: #bbf7d0;
+      --mint-500: #16a34a;
+      --mint-600: #15803d;
+
+      /* Soft Alert / Warning (Subtle Amber) */
+      --amber-50: #fffbeb;
+      --amber-100: #fef3c7;
+      --amber-600: #d97706;
+
+      /* High readability slate typography */
+      --text-main: #0f172a;
+      --text-body: #334155;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+
+      /* Soft drop shadows */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+      --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.03), 0 6px 16px -2px rgba(15, 23, 42, 0.03);
+      --shadow-card-hover: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 10px 24px -3px rgba(15, 23, 42, 0.05);
+
+      /* Radius */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-canvas);
+      color: var(--text-body);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* Layout Shell */
+    .dashboard-layout {
+      display: flex;
+      min-height: 100vh;
+      background-color: var(--bg-canvas);
+    }
+
+    /* --------------------------------------------------------------------------
+       SIDEBAR NAVIGATION
+       -------------------------------------------------------------------------- */
+    .dashboard-sidebar {
+      width: 256px;
+      background-color: var(--bg-card);
+      border-right: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 24px 16px;
+      z-index: 40;
+    }
+
+    .brand-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 8px 24px 8px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--blue-500), #38bdf8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
+    }
+
+    .brand-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .brand-subtitle {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .nav-list {
+      list-style: none;
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex-grow: 1;
+    }
+
+    .nav-section-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-light);
+      padding: 12px 12px 6px 12px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.15s ease-in-out;
+    }
+
+    .nav-link:hover {
+      background-color: var(--blue-50);
+      color: var(--blue-600);
+    }
+
+    .nav-link.active {
+      background-color: var(--blue-100);
+      color: var(--blue-700);
+      font-weight: 600;
+    }
+
+    .nav-link.active .nav-icon {
+      color: var(--blue-600);
+    }
+
+    .nav-icon {
+      width: 18px;
+      height: 18px;
+      color: var(--text-muted);
+      transition: color 0.15s ease;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      background-color: var(--mint-100);
+      color: var(--mint-600);
+    }
+
+    .sidebar-footer {
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .hospital-system-pill {
+      background: var(--blue-50);
+      border: 1px solid var(--blue-100);
+      padding: 12px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-dot-pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--mint-500);
+      position: relative;
+    }
+
+    .status-dot-pulse::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: var(--mint-500);
+      opacity: 0.5;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.5; }
+      100% { transform: scale(2.4); opacity: 0; }
+    }
+
+    /* --------------------------------------------------------------------------
+       MAIN CONTENT CONTAINER
+       -------------------------------------------------------------------------- */
+    .dashboard-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    /* Topbar */
+    .dashboard-topbar {
+      height: 72px;
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .topbar-welcome {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .welcome-greeting {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .welcome-role {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--blue-600);
+      background-color: var(--blue-50);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      border: 1px solid var(--blue-100);
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      width: 280px;
+    }
+
+    .search-input-wrapper svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--text-light);
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 36px;
+      font-size: 0.85rem;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .search-input:focus {
+      background-color: #ffffff;
+      border-color: var(--blue-200);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.08);
+    }
+
+    .icon-button {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.15s ease;
+    }
+
+    .icon-button:hover {
+      background: var(--blue-50);
+      color: var(--blue-600);
+      border-color: var(--blue-200);
+    }
+
+    .notification-dot {
+      position: absolute;
+      top: 8px;
+      right: 9px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: #ef4444;
+      border: 2px solid #ffffff;
+    }
+
+    .user-profile-menu {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: var(--radius-md);
+      transition: background 0.15s ease;
+    }
+
+    .user-profile-menu:hover {
+      background: var(--blue-50);
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--blue-700);
+      border: 2px solid #ffffff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .user-meta-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .user-meta-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* Content Area */
+    .dashboard-content {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Page Header with Date Filter */
+    .page-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .page-title-heading {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+    }
+
+    .date-filter-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-body);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* --------------------------------------------------------------------------
+       QUICK STAT CARDS (4 COLUMNS)
+       -------------------------------------------------------------------------- */
+    .stat-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .stat-card {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card-hover);
+    }
+
+    .stat-card.pastel-blue {
+      background: linear-gradient(180deg, #f0f8ff 0%, #ffffff 100%);
+      border-color: #dbeafe;
+    }
+
+    .stat-card.pastel-mint {
+      background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%);
+      border-color: #dcfce7;
+    }
+
+    .stat-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .stat-icon-wrapper {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-card.pastel-blue .stat-icon-wrapper {
+      background-color: var(--blue-100);
+      color: var(--blue-600);
+    }
+
+    .stat-card.pastel-mint .stat-icon-wrapper {
+      background-color: var(--mint-100);
+      color: var(--mint-600);
+    }
+
+    .stat-delta-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .delta-positive {
+      background-color: var(--mint-100);
+      color: var(--mint-600);
+      border: 1px solid var(--mint-200);
+    }
+
+    .delta-neutral {
+      background-color: var(--blue-50);
+      color: var(--blue-600);
+      border: 1px solid var(--blue-100);
+    }
+
+    .stat-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .stat-value-row {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .stat-main-number {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .stat-subtext {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .stat-progress-bar {
+      width: 100%;
+      height: 6px;
+      background-color: #f1f5f9;
+      border-radius: 9999px;
+      margin-top: 18px;
+      overflow: hidden;
+    }
+
+    .stat-progress-fill-blue {
+      height: 100%;
+      background: linear-gradient(90deg, #38bdf8, var(--blue-500));
+      border-radius: 9999px;
+    }
+
+    .stat-progress-fill-mint {
+      height: 100%;
+      background: linear-gradient(90deg, #4ade80, var(--mint-500));
+      border-radius: 9999px;
+    }
+
+    /* --------------------------------------------------------------------------
+       TWO COLUMN MAIN SECTION
+       -------------------------------------------------------------------------- */
+    .dashboard-grid-2col {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: 24px;
+    }
+
+    .card-panel {
+      background-color: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      box-shadow: var(--shadow-card);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .panel-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .panel-action-btn {
+      background: none;
+      border: none;
+      color: var(--text-light);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+    }
+
+    .panel-action-btn:hover {
+      color: var(--text-main);
+      background-color: var(--bg-canvas);
+    }
+
+    /* Chart Simulation */
+    .chart-container {
+      width: 100%;
+      height: 220px;
+      position: relative;
+    }
+
+    .chart-legend {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+    }
+
+    .legend-dot-blue {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--blue-500);
+    }
+
+    .legend-dot-mint {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--mint-500);
+    }
+
+    /* Table Component */
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .custom-table th {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+      background-color: #fafbfc;
+    }
+
+    .custom-table td {
+      padding: 13px 14px;
+      font-size: 0.85rem;
+      border-bottom: 1px solid var(--border-subtle);
+      vertical-align: middle;
+    }
+
+    .custom-table tbody tr:hover {
+      background-color: #f8fafc;
+    }
+
+    .patient-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar-sm {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--blue-100);
+      color: var(--blue-700);
+      font-weight: 700;
+      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .patient-name {
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .patient-id {
+      font-size: 0.72rem;
+      color: var(--text-light);
+    }
+
+    .status-badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      display: inline-block;
+    }
+
+    .status-confirmed {
+      background-color: var(--mint-50);
+      color: var(--mint-600);
+      border: 1px solid var(--mint-200);
+    }
+
+    .status-pending {
+      background-color: var(--amber-50);
+      color: var(--amber-600);
+      border: 1px solid var(--amber-100);
+    }
+
+    .status-in-progress {
+      background-color: var(--blue-50);
+      color: var(--blue-600);
+      border: 1px solid var(--blue-100);
+    }
+
+    .btn-action-triage {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--blue-600);
+      background-color: var(--blue-50);
+      border: 1px solid var(--blue-200);
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .btn-action-triage:hover {
+      background-color: var(--blue-500);
+      color: #ffffff;
+      border-color: var(--blue-500);
+    }
+
+    /* --------------------------------------------------------------------------
+       DOCTOR AVAILABILITY SECTION & CXR INTEGRATION
+       -------------------------------------------------------------------------- */
+    .doctors-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 6px;
+    }
+
+    .doctor-card {
+      background-color: var(--bg-canvas);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.15s ease;
+    }
+
+    .doctor-card:hover {
+      background-color: #ffffff;
+      border-color: var(--blue-200);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .doctor-img-wrap {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--blue-600);
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 2px solid #ffffff;
+    }
+
+    .doctor-name {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .doctor-dept {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .doctor-status {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-top: 3px;
+    }
+
+    .avail-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .status-available { color: var(--mint-600); }
+    .status-available .avail-dot { background-color: var(--mint-500); }
+
+    .status-busy { color: var(--amber-600); }
+    .status-busy .avail-dot { background-color: var(--amber-600); }
+
+    /* CXR AI Integration Banner (Clinical & Trustworthy) */
+    .cxr-triage-banner {
+      background: linear-gradient(135deg, #075985 0%, #0369a1 100%);
+      color: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 20px -2px rgba(3, 105, 161, 0.25);
+      margin-top: 4px;
+    }
+
+    .cxr-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .cxr-banner-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      background-color: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cxr-banner-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .cxr-banner-desc {
+      font-size: 0.85rem;
+      color: #e0f2fe;
+      margin-top: 2px;
+    }
+
+    .btn-cxr-action {
+      background-color: #ffffff;
+      color: var(--blue-700);
+      font-weight: 700;
+      font-size: 0.88rem;
+      padding: 10px 20px;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    .btn-cxr-action:hover {
+      background-color: #f8fafc;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .stat-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .dashboard-grid-2col {
+        grid-template-columns: 1fr;
+      }
+      .doctors-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-sidebar {
+        display: none;
+      }
+      .stat-cards-grid {
+        grid-template-columns: 1fr;
+      }
+      .doctors-grid {
+        grid-template-columns: 1fr;
+      }
+      .dashboard-content {
+        padding: 16px;
+      }
+      .dashboard-topbar {
+        padding: 0 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-layout">
+
+    <!-- ======================================================================
+         SIDEBAR NAVIGATION
+         ====================================================================== -->
+    <aside class="dashboard-sidebar">
+      <!-- Brand Logo -->
+      <div class="brand-header">
+        <div class="brand-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">General Hospital</h1>
+          <p class="brand-subtitle">Clinical Operations</p>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <ul class="nav-list">
+        <li class="nav-section-title">Overview</li>
+        <li>
+          <a href="#" class="nav-link active">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="9" rx="1"/>
+              <rect x="14" y="3" width="7" height="5" rx="1"/>
+              <rect x="14" y="12" width="7" height="9" rx="1"/>
+              <rect x="3" y="16" width="7" height="5" rx="1"/>
+            </svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link" id="navPatients">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            <span>Patients</span>
+            <span class="nav-badge">1,248</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span>Staff / Doctors</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <span>Appointments</span>
+            <span class="nav-badge" style="background:#e0f0fe; color:#0284c7;">114</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span>Departments</span>
+          </a>
+        </li>
+
+        <li class="nav-section-title">Clinical AI</li>
+        <li>
+          <a href="index.html" class="nav-link" title="Open RAD·LAB Chest X-Ray Finding Analyzer">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span>CXR Analyzer</span>
+            <span class="nav-badge" style="background:#fef3c7; color:#d97706;">Live</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            <span>Reports</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            <span>Settings</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Footer System Pill -->
+      <div class="sidebar-footer">
+        <div class="hospital-system-pill">
+          <div class="status-dot-pulse"></div>
+          <div>
+            <p style="font-size: 0.8rem; font-weight: 700; color: var(--text-main);">All Systems Normal</p>
+            <p style="font-size: 0.7rem; color: var(--text-muted);">EMR & PACs Connected</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ======================================================================
+         MAIN CONTENT AREA
+         ====================================================================== -->
+    <main class="dashboard-main">
+
+      <!-- Topbar -->
+      <header class="dashboard-topbar">
+        <div class="topbar-welcome">
+          <h2 class="welcome-greeting">Welcome, Sarah Miller</h2>
+          <span class="welcome-role">Admin</span>
+        </div>
+
+        <div class="topbar-actions">
+          <!-- Search Bar -->
+          <div class="search-input-wrapper">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" id="globalSearchInput" class="search-input" placeholder="Search patient, doctor, MRN...">
+          </div>
+
+          <!-- Notification Bell -->
+          <button class="icon-button" title="Notifications" id="notificationBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            <span class="notification-dot"></span>
+          </button>
+
+          <!-- User Profile -->
+          <div class="user-profile-menu">
+            <div class="user-avatar">SM</div>
+            <div>
+              <div class="user-meta-name">Sarah Miller</div>
+              <div class="user-meta-sub">Chief Administrator</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Body Content -->
+      <div class="dashboard-content">
+
+        <!-- Page Header & Date Badge -->
+        <div class="page-title-row">
+          <div>
+            <h2 class="page-title-heading">Overview</h2>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px;">Daily hospital operational metrics and outpatient triage</p>
+          </div>
+          <div class="date-filter-chip">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            <span id="currentDateDisplay">Oct 25, 2026</span>
+          </div>
+        </div>
+
+        <!-- Quick Stat Cards (4 Columns) -->
+        <div class="stat-cards-grid">
+
+          <!-- Card 1: Total Patients (Pastel Blue) -->
+          <div class="stat-card pastel-blue">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              </div>
+              <span class="stat-delta-badge delta-positive">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+                +5.2%
+              </span>
+            </div>
+            <div>
+              <p class="stat-title">Total Patients</p>
+              <div class="stat-value-row">
+                <h3 class="stat-main-number">1,248</h3>
+                <span class="stat-subtext">Active cases</span>
+              </div>
+            </div>
+            <div class="stat-progress-bar">
+              <div class="stat-progress-fill-blue" style="width: 72%;"></div>
+            </div>
+          </div>
+
+          <!-- Card 2: Available Doctors -->
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper" style="background: #e0f2fe; color: #0284c7;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+              <span class="stat-delta-badge delta-neutral">98% on duty</span>
+            </div>
+            <div>
+              <p class="stat-title">Available Doctors</p>
+              <div class="stat-value-row">
+                <h3 class="stat-main-number">76</h3>
+                <span class="stat-subtext">/ 78 total</span>
+              </div>
+            </div>
+            <div class="stat-progress-bar">
+              <div class="stat-progress-fill-blue" style="width: 98%;"></div>
+            </div>
+          </div>
+
+          <!-- Card 3: Occupied Beds (Pastel Mint) -->
+          <div class="stat-card pastel-mint">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"/>
+                </svg>
+              </div>
+              <span class="stat-delta-badge delta-positive">82.4% full</span>
+            </div>
+            <div>
+              <p class="stat-title">Occupied Beds</p>
+              <div class="stat-value-row">
+                <h3 class="stat-main-number">412</h3>
+                <span class="stat-subtext">/ 500 beds</span>
+              </div>
+            </div>
+            <div class="stat-progress-bar">
+              <div class="stat-progress-fill-mint" style="width: 82.4%;"></div>
+            </div>
+          </div>
+
+          <!-- Card 4: Today's Appointments -->
+          <div class="stat-card">
+            <div class="stat-card-header">
+              <div class="stat-icon-wrapper" style="background: #dcfce7; color: #16a34a;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </div>
+              <span class="stat-delta-badge delta-neutral" style="background: #f0fdf4; color: #15803d; border-color: #bbf7d0;">
+                8 Remaining
+              </span>
+            </div>
+            <div>
+              <p class="stat-title">Today's Appointments</p>
+              <div class="stat-value-row">
+                <h3 class="stat-main-number">114</h3>
+                <span class="stat-subtext">106 Completed</span>
+              </div>
+            </div>
+            <div class="stat-progress-bar">
+              <div class="stat-progress-fill-mint" style="width: 93%;"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Two Column Section -->
+        <div class="dashboard-grid-2col">
+
+          <!-- Left Column: Patient Activity Weekly Trend -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">Patient Activity</h3>
+                <p class="panel-subtitle">Weekly hospital admissions & outpatient consults</p>
+              </div>
+              <button class="panel-action-btn" title="More options">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Legend -->
+            <div class="chart-legend">
+              <div class="legend-item">
+                <span class="legend-dot-blue"></span>
+                <span>Admissions (Weekly: 180)</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot-mint"></span>
+                <span>Discharges (Weekly: 154)</span>
+              </div>
+            </div>
+
+            <!-- Smooth SVG Curve Chart -->
+            <div class="chart-container">
+              <svg width="100%" height="100%" viewBox="0 0 500 200" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="blueGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#0284c7" stop-opacity="0.22"/>
+                    <stop offset="100%" stop-color="#0284c7" stop-opacity="0.0"/>
+                  </linearGradient>
+                </defs>
+
+                <line x1="0" y1="40" x2="500" y2="40" stroke="#f1f5f9" stroke-width="1"/>
+                <line x1="0" y1="90" x2="500" y2="90" stroke="#f1f5f9" stroke-width="1"/>
+                <line x1="0" y1="140" x2="500" y2="140" stroke="#f1f5f9" stroke-width="1"/>
+                <line x1="0" y1="190" x2="500" y2="190" stroke="#e2e8f0" stroke-width="1"/>
+
+                <path d="M 0 170 Q 70 80, 140 145 T 280 85 T 420 50 L 500 130 L 500 190 L 0 190 Z" fill="url(#blueGradient)"/>
+                <path d="M 0 170 Q 70 80, 140 145 T 280 85 T 420 50 L 500 130" fill="none" stroke="#0284c7" stroke-width="3" stroke-linecap="round"/>
+
+                <circle cx="70" cy="115" r="4.5" fill="#ffffff" stroke="#0284c7" stroke-width="2.5"/>
+                <circle cx="140" cy="145" r="4.5" fill="#ffffff" stroke="#0284c7" stroke-width="2.5"/>
+                <circle cx="210" cy="100" r="4.5" fill="#ffffff" stroke="#0284c7" stroke-width="2.5"/>
+                <circle cx="280" cy="85" r="4.5" fill="#ffffff" stroke="#0284c7" stroke-width="2.5"/>
+                <circle cx="350" cy="110" r="4.5" fill="#ffffff" stroke="#0284c7" stroke-width="2.5"/>
+                <circle cx="420" cy="50" r="5" fill="#0284c7" stroke="#ffffff" stroke-width="2.5"/>
+                <circle cx="500" cy="130" r="4.5" fill="#ffffff" stroke="#0284c7" stroke-width="2.5"/>
+              </svg>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-light); margin-top: 8px; font-weight: 600;">
+              <span>Sun</span>
+              <span>Mon</span>
+              <span>Tue</span>
+              <span>Wed</span>
+              <span>Thu</span>
+              <span>Fri</span>
+              <span>Sat</span>
+            </div>
+
+            <div style="margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">Current Cycle:</span>
+                <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-main); margin-left: 4px;">Oct 19 – Oct 25</span>
+              </div>
+              <span style="font-size: 0.78rem; font-weight: 600; color: var(--blue-600); cursor: pointer;">Download Analytics &rarr;</span>
+            </div>
+          </div>
+
+          <!-- Right Column: Upcoming Appointments Table -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">Upcoming Appointments</h3>
+                <p class="panel-subtitle">Today's scheduled clinic appointments & radiograph triage</p>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="panel-action-btn" title="Filter list">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Appointments Table -->
+            <div style="overflow-x: auto;">
+              <table class="custom-table" id="appointmentsTable">
+                <thead>
+                  <tr>
+                    <th>Patient</th>
+                    <th>Time</th>
+                    <th>Doctor</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                    <th>Triage / CXR</th>
+                  </tr>
+                </thead>
+                <tbody id="appointmentsTableBody">
+                  <!-- Row 1: David Chen -->
+                  <tr>
+                    <td>
+                      <div class="patient-cell">
+                        <div class="avatar-sm">DC</div>
+                        <div>
+                          <div class="patient-name">David Chen</div>
+                          <div class="patient-id">#PT-8491</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td style="font-weight: 600; color: var(--text-main);">09:30 AM</td>
+                    <td>Dr. Emily Evans</td>
+                    <td style="color: var(--text-muted);">Cardiology</td>
+                    <td>
+                      <span class="status-badge status-confirmed">Confirmed</span>
+                    </td>
+                    <td>
+                      <a href="index.html?sample=eval_001.png&patient=David+Chen&mrn=PT-8491" class="btn-action-triage" title="Load David Chen CXR Scan">
+                        <span>Scan CXR</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                      </a>
+                    </td>
+                  </tr>
+
+                  <!-- Row 2: Maria Garcia -->
+                  <tr>
+                    <td>
+                      <div class="patient-cell">
+                        <div class="avatar-sm" style="background:#dcfce7; color:#15803d;">MG</div>
+                        <div>
+                          <div class="patient-name">Maria Garcia</div>
+                          <div class="patient-id">#PT-8492</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td style="font-weight: 600; color: var(--text-main);">10:15 AM</td>
+                    <td>Dr. Michael Patel</td>
+                    <td style="color: var(--text-muted);">Pediatrics</td>
+                    <td>
+                      <span class="status-badge status-confirmed">Confirmed</span>
+                    </td>
+                    <td>
+                      <a href="index.html?sample=eval_002.png&patient=Maria+Garcia&mrn=PT-8492" class="btn-action-triage" title="Load Maria Garcia CXR Scan">
+                        <span>Scan CXR</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                      </a>
+                    </td>
+                  </tr>
+
+                  <!-- Row 3: Robert Taylor -->
+                  <tr>
+                    <td>
+                      <div class="patient-cell">
+                        <div class="avatar-sm" style="background:#fef3c7; color:#b45309;">RT</div>
+                        <div>
+                          <div class="patient-name">Robert Taylor</div>
+                          <div class="patient-id">#PT-8493</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td style="font-weight: 600; color: var(--text-main);">11:00 AM</td>
+                    <td>Dr. Sarah Jones</td>
+                    <td style="color: var(--text-muted);">Neurology</td>
+                    <td>
+                      <span class="status-badge status-in-progress">In Consultation</span>
+                    </td>
+                    <td>
+                      <a href="index.html?sample=eval_003.png&patient=Robert+Taylor&mrn=PT-8493" class="btn-action-triage" title="Load Robert Taylor CXR Scan">
+                        <span>Scan CXR</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                      </a>
+                    </td>
+                  </tr>
+
+                  <!-- Row 4: Aisha Khan -->
+                  <tr>
+                    <td>
+                      <div class="patient-cell">
+                        <div class="avatar-sm" style="background:#f3e8ff; color:#7e22ce;">AK</div>
+                        <div>
+                          <div class="patient-name">Aisha Khan</div>
+                          <div class="patient-id">#PT-8494</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td style="font-weight: 600; color: var(--text-main);">11:45 AM</td>
+                    <td>Dr. Emily Evans</td>
+                    <td style="color: var(--text-muted);">Cardiology</td>
+                    <td>
+                      <span class="status-badge status-pending">Checked In</span>
+                    </td>
+                    <td>
+                      <a href="index.html?sample=eval_004.png&patient=Aisha+Khan&mrn=PT-8494" class="btn-action-triage" title="Load Aisha Khan CXR Scan">
+                        <span>Scan CXR</span>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="margin-top: auto; padding-top: 14px; display: flex; justify-content: flex-end;">
+              <span style="font-size: 0.82rem; font-weight: 600; color: var(--blue-600); cursor: pointer;" id="btnViewAllAppts">
+                View All Appointments (114) &rarr;
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Doctor Availability Grid -->
+        <div class="card-panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">Doctor Availability</h3>
+              <p class="panel-subtitle">On-duty specialists & active clinical shifts</p>
+            </div>
+            <span style="font-size: 0.8rem; font-weight: 600; color: var(--mint-600); background: var(--mint-50); padding: 4px 10px; border-radius: 9999px;">
+              34 Active Shifts Now
+            </span>
+          </div>
+
+          <div class="doctors-grid">
+            <!-- Doctor 1 -->
+            <div class="doctor-card">
+              <div class="doctor-img-wrap">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+              <div style="flex: 1;">
+                <div class="doctor-name">Dr. Emily Evans</div>
+                <div class="doctor-dept">Chief of Cardiology</div>
+                <div class="doctor-status status-available">
+                  <span class="avail-dot"></span>
+                  <span>Available (Room 304)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Doctor 2 -->
+            <div class="doctor-card">
+              <div class="doctor-img-wrap" style="color: var(--amber-600);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+              <div style="flex: 1;">
+                <div class="doctor-name">Dr. Michael Patel</div>
+                <div class="doctor-dept">Pediatrics Specialist</div>
+                <div class="doctor-status status-busy">
+                  <span class="avail-dot"></span>
+                  <span>In Consult (Next: 11:30 AM)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Doctor 3 -->
+            <div class="doctor-card">
+              <div class="doctor-img-wrap" style="color: var(--mint-600);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </div>
+              <div style="flex: 1;">
+                <div class="doctor-name">Dr. Sarah Jones</div>
+                <div class="doctor-dept">Neurology Department</div>
+                <div class="doctor-status status-available">
+                  <span class="avail-dot"></span>
+                  <span>Available (Room 112)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CXR AI Triage Banner -->
+        <div class="cxr-triage-banner">
+          <div class="cxr-banner-left">
+            <div class="cxr-banner-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                <path d="M12 9v4"/>
+                <path d="M10 11h4"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="cxr-banner-title">Chest Radiograph Triage & AI Diagnostics Ready</h3>
+              <p class="cxr-banner-desc">PubMedCLIP Zero-Shot Vision-Language attribution engine connected. 16 sample scans ready for evaluation.</p>
+            </div>
+          </div>
+          <a href="index.html" class="btn-cxr-action" title="Open RAD·LAB Chest X-Ray Finding Analyzer Console">
+            <span>Launch CXR Analyzer</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"/>
+              <polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Interactive Search & Table Filtering Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Dynamic Date
+      const dateEl = document.getElementById('currentDateDisplay');
+      if (dateEl) {
+        const today = new Date();
+        const options = { month: 'short', day: 'numeric', year: 'numeric' };
+        dateEl.textContent = today.toLocaleDateString('en-US', options);
+      }
+
+      // Live Table Search Filtering
+      const searchInput = document.getElementById('globalSearchInput');
+      const tableBody = document.getElementById('appointmentsTableBody');
+
+      if (searchInput && tableBody) {
+        searchInput.addEventListener('input', (e) => {
+          const query = e.target.value.toLowerCase().trim();
+          const rows = tableBody.querySelectorAll('tr');
+
+          rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            if (text.includes(query)) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        });
+      }
+
+      // Quick Notification Toast
+      const notifBtn = document.getElementById('notificationBtn');
+      if (notifBtn) {
+        notifBtn.addEventListener('click', () => {
+          alert("Hospital Notifications:\n• 2 New CXR Scans queued in Emergency Triage\n• Bed Occupancy at 82.4% capacity\n• Dr. Emily Evans shift started");
+        });
+      }
+    });
+  </script>
+</body>
+</html>

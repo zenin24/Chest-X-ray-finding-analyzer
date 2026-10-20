@@ -31,8 +31,8 @@
           <span class="beacon-pulse-ring"></span>
         </div>
         <div class="sidebar-brand-text">
-          <span class="brand-name-sup">RAD·LAB</span>
-          <span class="brand-name-sub">Research Console</span>
+          <span class="brand-name-sup">GENERAL HOSPITAL</span>
+          <span class="brand-name-sub">Radiology PACS</span>
         </div>
         <button class="btn-sidebar-toggle" id="btnSidebarToggle" aria-label="Toggle compact sidebar" title="Toggle Sidebar">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
@@ -44,14 +44,34 @@
       <!-- Navigation Item Groups -->
       <nav class="sidebar-nav" aria-label="Primary Console Navigation">
         <div class="nav-section-label">CLINICAL SUITE</div>
-        <a href="#viewOverview" class="sidebar-nav-item" id="navItemOverview" title="System Overview & Research Telemetry">
+        <a href="hospital_dashboard.html" class="sidebar-nav-item" id="navItemHospitalDashboard" title="Hospital Operations & Management Dashboard">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          <span class="nav-label">Hospital Ops</span>
+        </a>
+
+        <a href="#viewOverview" class="sidebar-nav-item" id="navItemOverview" title="Hospital Radiology Telemetry & KPI Overview">
           <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect width="7" height="9" x="3" y="3" rx="1"/>
             <rect width="7" height="5" x="14" y="3" rx="1"/>
             <rect width="7" height="9" x="14" y="12" rx="1"/>
             <rect width="7" height="5" x="3" y="16" rx="1"/>
           </svg>
-          <span class="nav-label">Overview</span>
+          <span class="nav-label">Dashboard</span>
+        </a>
+
+        <a href="#viewWorklist" class="sidebar-nav-item" id="navItemWorklist" title="Radiology Imaging Worklist & Patient Studies">
+          <svg class="nav-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="8" y1="6" x2="21" y2="6"/>
+            <line x1="8" y1="12" x2="21" y2="12"/>
+            <line x1="8" y1="18" x2="21" y2="18"/>
+            <line x1="3" y1="6" x2="3.01" y2="6"/>
+            <line x1="3" y1="12" x2="3.01" y2="12"/>
+            <line x1="3" y1="18" x2="3.01" y2="18"/>
+          </svg>
+          <span class="nav-label">Imaging Worklist</span>
+          <span class="nav-live-dot" style="background: #38bdf8;" aria-hidden="true"></span>
         </a>
 
         <a href="#viewportSection" class="sidebar-nav-item active" id="navItemConsole" title="New Image Analysis PACS Workspace">
@@ -60,8 +80,7 @@
             <line x1="8" y1="21" x2="16" y2="21"/>
             <line x1="12" y1="17" x2="12" y2="21"/>
           </svg>
-          <span class="nav-label">New Analysis</span>
-          <span class="nav-live-dot" aria-hidden="true"></span>
+          <span class="nav-label">PACS Viewer</span>
         </a>
 
         <a href="#viewHistory" class="sidebar-nav-item" id="navItemHistory" title="Session Analysis Audit History">
@@ -296,6 +315,14 @@
             </svg>
             <span>New Study</span>
           </button>
+
+          <div class="user-profile-topbar" id="topbarUserProfile" title="Logged in as Dr. Eleanor Vance, MD (Attending Radiologist)">
+            <div class="topbar-avatar">EV</div>
+            <div class="topbar-user-info">
+              <span class="topbar-user-name">Dr. E. Vance, MD</span>
+              <span class="topbar-user-role">Attending Radiologist</span>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -492,6 +519,62 @@
       </section>
 
       <!-- ================================================================= -->
+      <!-- VIEW: IMAGING WORKLIST & PATIENT QUEUE                            -->
+      <!-- ================================================================= -->
+      <section class="view-panel-section" id="viewWorklist" aria-label="Radiology Imaging Worklist">
+        <div class="view-header">
+          <div class="view-title-group">
+            <h2>Radiology Worklist &amp; Study Queue</h2>
+            <p>Active patient imaging roster, triage priority classification, and one-click PACS viewer ingestion.</p>
+          </div>
+          <div>
+            <button class="btn-cta-launch" id="btnWorklistNewUpload" type="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>Upload DICOM / X-Ray</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Worklist Control Toolbar -->
+        <div class="worklist-toolbar">
+          <div class="worklist-search-box">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="text" id="worklistSearchInput" placeholder="Filter by patient name, MRN, study ID, or clinical indication..." autocomplete="off">
+          </div>
+          <div class="worklist-tabs-group" role="tablist">
+            <button class="worklist-tab active" data-filter="all" type="button">All Studies (16)</button>
+            <button class="worklist-tab" data-filter="stat" type="button">STAT / Urgent</button>
+            <button class="worklist-tab" data-filter="routine" type="button">Routine</button>
+            <button class="worklist-tab" data-filter="unread" type="button">Unread</button>
+          </div>
+        </div>
+
+        <!-- Worklist Table -->
+        <div class="verification-table-wrap">
+          <table class="worklist-table">
+            <thead>
+              <tr>
+                <th>PRIORITY</th>
+                <th>STUDY ID</th>
+                <th>PATIENT DETAILS</th>
+                <th>MODALITY</th>
+                <th>CLINICAL INDICATION</th>
+                <th>SCHEDULED / TIME</th>
+                <th>STATUS</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="worklistTableBody">
+              <!-- Populated dynamically by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================================================================= -->
       <!-- VIEW 2: NEW IMAGE ANALYSIS WORKSTATION (PACS CONSOLE)             -->
       <!-- ================================================================= -->
       <section class="view-panel-section active-view" id="viewConsole" aria-label="New Image Analysis PACS Workspace">
@@ -659,7 +742,11 @@
                 <button class="case-preset-btn" data-case="normal" data-file="eval_001.png" title="Normal Healthy Case">
                   Normal
                 </button>
-              </div>
+            </div>
+
+            <!-- Quick Hospital Patient Worklist Selector Strip -->
+            <div class="quick-worklist-strip" id="quickWorklistStrip" aria-label="Quick Patient Study Selector">
+              <!-- Dynamically populated by app.js -->
             </div>
 
             <!-- DICOM / PACS Workstation Screen Canvas -->

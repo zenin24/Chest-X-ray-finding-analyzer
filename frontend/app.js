@@ -303,6 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Initial Setup ---
   initSidebar();
+  initWorklist();
   init7x7PatchGrid(activeFindingKey);
   checkBackendHealth();
   updateTimestamp();
@@ -450,8 +451,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function loadPresetCase(filename) {
+    activeStudyFile = filename;
+    if (typeof renderQuickWorklistStrip === 'function') {
+      renderQuickWorklistStrip();
+    }
     try {
-      const res = await fetch(`${API_BASE}/static/samples/${filename}`);
+      let res = await fetch(`${API_BASE}/static/samples/${filename}`);
+      if (!res.ok) {
+        res = await fetch(`samples/${filename}`);
+      }
       if (res.ok) {
         const blob = await res.blob();
         const file = new File([blob], filename, { type: 'image/png' });
@@ -1766,6 +1774,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // =========================================================================
   const viewPanels = {
     navItemOverview: 'viewOverview',
+    navItemWorklist: 'viewWorklist',
     navItemConsole: 'viewConsole',
     navItemHistory: 'viewHistory',
     navItemVerification: 'viewVerification',
@@ -1791,6 +1800,8 @@ document.addEventListener('DOMContentLoaded', () => {
       fetchSessionHistory();
     } else if (targetPanelId === 'viewOverview') {
       updateDashboardTelemetry();
+    } else if (targetPanelId === 'viewWorklist') {
+      renderWorklistTable();
     }
   }
 
@@ -1804,6 +1815,409 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
+
+  // =========================================================================
+  // RADIOLOGY WORKLIST & STUDY QUEUE CONTROLLER
+  // =========================================================================
+  const WORKLIST_PATIENTS = [
+    {
+      id: 'CXR-2026-8492',
+      mrn: 'MRN-782190',
+      patientName: 'Morrison, Arthur',
+      ageGender: '64M',
+      location: 'ED Bay 04',
+      modality: 'DX Frontal PA',
+      indication: 'Dyspnea, hypoxemia, suspected pleural effusion',
+      scheduled: '14:20 Today',
+      priority: 'stat',
+      status: 'Ready for Review',
+      file: 'eval_003.png'
+    },
+    {
+      id: 'CXR-2026-8493',
+      mrn: 'MRN-419203',
+      patientName: 'Chen, Wei',
+      ageGender: '52M',
+      location: 'ICU Bed 12',
+      modality: 'CR Portable AP',
+      indication: 'Fever (39.1°C), productive cough, right lower lobe opacity',
+      scheduled: '14:35 Today',
+      priority: 'urgent',
+      status: 'Ready for Review',
+      file: 'eval_002.png'
+    },
+    {
+      id: 'CXR-2026-8494',
+      mrn: 'MRN-839102',
+      patientName: 'Davis, Eleanor',
+      ageGender: '71F',
+      location: 'Cardiology 3W',
+      modality: 'DX Frontal PA',
+      indication: 'Congestive heart failure, orthopnea, assess cardiomegaly',
+      scheduled: '14:50 Today',
+      priority: 'urgent',
+      status: 'Ready for Review',
+      file: 'eval_005.png'
+    },
+    {
+      id: 'CXR-2026-8495',
+      mrn: 'MRN-294817',
+      patientName: "O'Connor, Sean",
+      ageGender: '38M',
+      location: 'Trauma Bay 2',
+      modality: 'DX Frontal AP',
+      indication: 'Acute pleuritic chest pain post-fall, rule out pneumothorax',
+      scheduled: '15:05 Today',
+      priority: 'stat',
+      status: 'Ready for Review',
+      file: 'eval_004.png'
+    },
+    {
+      id: 'CXR-2026-8496',
+      mrn: 'MRN-602941',
+      patientName: 'Alvarez, Sofia',
+      ageGender: '45F',
+      location: 'Pulmonology Outpatient',
+      modality: 'DX Frontal PA',
+      indication: 'Post-op hypoventilation, evaluate bibasilar atelectasis',
+      scheduled: '15:15 Today',
+      priority: 'routine',
+      status: 'Ready for Review',
+      file: 'eval_006.png'
+    },
+    {
+      id: 'CXR-2026-8497',
+      mrn: 'MRN-194820',
+      patientName: 'Taylor, Marcus',
+      ageGender: '29M',
+      location: 'Occupational Health',
+      modality: 'DX Frontal PA',
+      indication: 'Pre-employment screening, baseline thoracic clearance',
+      scheduled: '15:30 Today',
+      priority: 'routine',
+      status: 'Ready for Review',
+      file: 'eval_001.png'
+    },
+    {
+      id: 'CXR-2026-8498',
+      mrn: 'MRN-552019',
+      patientName: 'Patel, Sanjay',
+      ageGender: '58M',
+      location: 'Stepdown Unit 4',
+      modality: 'DX Frontal PA',
+      indication: 'Post-CABG surveillance, verify lung expansion',
+      scheduled: '15:45 Today',
+      priority: 'routine',
+      status: 'Ready for Review',
+      file: 'eval_007.png'
+    },
+    {
+      id: 'CXR-2026-8499',
+      mrn: 'MRN-773192',
+      patientName: 'Kowalski, Anna',
+      ageGender: '67F',
+      location: 'Geriatrics 2E',
+      modality: 'CR Portable AP',
+      indication: 'Decreased breath sounds at left base, rule out fluid',
+      scheduled: '16:00 Today',
+      priority: 'urgent',
+      status: 'Ready for Review',
+      file: 'eval_008.png'
+    },
+    {
+      id: 'CXR-2026-8500',
+      mrn: 'MRN-338291',
+      patientName: 'Jackson, Robert',
+      ageGender: '42M',
+      location: 'Urgent Care Center',
+      modality: 'DX Frontal PA',
+      indication: 'Persistent dry cough 3 weeks, non-smoker, clear lungs',
+      scheduled: '16:15 Today',
+      priority: 'routine',
+      status: 'Ready for Review',
+      file: 'eval_009.png'
+    },
+    {
+      id: 'CXR-2026-8501',
+      mrn: 'MRN-991204',
+      patientName: 'Kim, Min-Jun',
+      ageGender: '61M',
+      location: 'Respiratory Ward',
+      modality: 'DX Frontal PA',
+      indication: 'Community-acquired pneumonia followup, day 4 abx',
+      scheduled: '16:30 Today',
+      priority: 'urgent',
+      status: 'Ready for Review',
+      file: 'eval_010.png'
+    },
+    {
+      id: 'CXR-2026-8502',
+      mrn: 'MRN-442819',
+      patientName: 'Rossi, Giulia',
+      ageGender: '73F',
+      location: 'Telemetry 5S',
+      modality: 'CR Portable AP',
+      indication: 'Bilateral pedal edema, increased dyspnea on exertion',
+      scheduled: '16:40 Today',
+      priority: 'urgent',
+      status: 'Ready for Review',
+      file: 'eval_011.png'
+    },
+    {
+      id: 'CXR-2026-8503',
+      mrn: 'MRN-882194',
+      patientName: 'Washington, David',
+      ageGender: '35M',
+      location: 'ED Resus 1',
+      modality: 'CR Portable AP',
+      indication: 'Sudden shortness of breath, tall thin male, right chest pain',
+      scheduled: '16:50 Today',
+      priority: 'stat',
+      status: 'Ready for Review',
+      file: 'eval_012.png'
+    },
+    {
+      id: 'CXR-2026-8504',
+      mrn: 'MRN-617283',
+      patientName: 'Schmidt, Helena',
+      ageGender: '80F',
+      location: 'Internal Med 3N',
+      modality: 'DX Frontal PA',
+      indication: 'Hypertensive heart disease, check cardiac silhouette',
+      scheduled: '17:00 Today',
+      priority: 'routine',
+      status: 'Ready for Review',
+      file: 'eval_013.png'
+    },
+    {
+      id: 'CXR-2026-8505',
+      mrn: 'MRN-529103',
+      patientName: 'Larsson, Erik',
+      ageGender: '50M',
+      location: 'PACU Recovery',
+      modality: 'CR Portable AP',
+      indication: 'Post-abdominal surgery, shallow respiration, check bases',
+      scheduled: '17:15 Today',
+      priority: 'routine',
+      status: 'Ready for Review',
+      file: 'eval_014.png'
+    },
+    {
+      id: 'CXR-2026-8506',
+      mrn: 'MRN-330192',
+      patientName: 'Gomez, Carlos',
+      ageGender: '48M',
+      location: 'ED Rapid Assessment',
+      modality: 'DX Frontal PA',
+      indication: 'Hemoptysis trace, low grade fever, night sweats',
+      scheduled: '17:25 Today',
+      priority: 'stat',
+      status: 'Ready for Review',
+      file: 'eval_015.png'
+    },
+    {
+      id: 'CXR-2026-8507',
+      mrn: 'MRN-712894',
+      patientName: 'Novak, Petra',
+      ageGender: '63F',
+      location: 'Outpatient Clinic B',
+      modality: 'DX Frontal PA',
+      indication: 'Annual cardiac clearance, stable chronic hypertension',
+      scheduled: '17:40 Today',
+      priority: 'routine',
+      status: 'Ready for Review',
+      file: 'eval_016.png'
+    }
+  ];
+
+  let currentWorklistFilter = 'all';
+  let currentWorklistSearch = '';
+  let activeStudyFile = 'eval_003.png';
+
+  function renderWorklistTable() {
+    const tbody = document.getElementById('worklistTableBody');
+    if (!tbody) return;
+
+    const filtered = WORKLIST_PATIENTS.filter(p => {
+      const matchesSearch = !currentWorklistSearch || 
+        p.patientName.toLowerCase().includes(currentWorklistSearch.toLowerCase()) ||
+        p.mrn.toLowerCase().includes(currentWorklistSearch.toLowerCase()) ||
+        p.id.toLowerCase().includes(currentWorklistSearch.toLowerCase()) ||
+        p.indication.toLowerCase().includes(currentWorklistSearch.toLowerCase());
+
+      if (!matchesSearch) return false;
+
+      if (currentWorklistFilter === 'all') return true;
+      if (currentWorklistFilter === 'stat') return p.priority === 'stat' || p.priority === 'urgent';
+      if (currentWorklistFilter === 'routine') return p.priority === 'routine';
+      if (currentWorklistFilter === 'unread') return p.file !== activeStudyFile;
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="8" style="text-align: center; color: var(--text-dim); padding: 2.5rem;">
+            No patient studies found matching current filter or search criteria.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(p => {
+      const isSelected = p.file === activeStudyFile;
+      const prioClass = p.priority === 'stat' ? 'stat' : (p.priority === 'urgent' ? 'urgent' : 'routine');
+      const prioLabel = p.priority.toUpperCase();
+      const statusLabel = isSelected ? 'In Viewer' : 'Ready for Review';
+      const statusClass = isSelected ? 'analyzed' : 'unread';
+
+      return `
+        <tr style="${isSelected ? 'background: rgba(2, 132, 199, 0.04);' : ''}">
+          <td>
+            <span class="priority-pill ${prioClass}">
+              <span class="priority-dot"></span>
+              ${prioLabel}
+            </span>
+          </td>
+          <td>
+            <strong style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-primary);">${p.id}</strong>
+          </td>
+          <td>
+            <div class="patient-cell-hospital">
+              <span class="patient-name-hospital">${p.patientName}</span>
+              <span class="patient-meta-hospital">${p.mrn} · ${p.ageGender} · ${p.location}</span>
+            </div>
+          </td>
+          <td>
+            <span style="font-size: 0.8rem; font-weight: 500; color: var(--text-secondary);">${p.modality}</span>
+          </td>
+          <td>
+            <span style="font-size: 0.82rem; color: var(--text-body); max-width: 260px; display: inline-block;">${p.indication}</span>
+          </td>
+          <td>
+            <span style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono);">${p.scheduled}</span>
+          </td>
+          <td>
+            <span class="worklist-status-badge ${statusClass}">${statusLabel}</span>
+          </td>
+          <td>
+            <button class="btn-open-study" data-study-id="${p.id}" data-file="${p.file}" type="button">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              <span>${isSelected ? 'Active' : 'Open in PACS'}</span>
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    // Bind row click
+    tbody.querySelectorAll('.btn-open-study').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const studyId = btn.getAttribute('data-study-id');
+        openStudyInPACS(studyId);
+      });
+    });
+  }
+
+  function openStudyInPACS(studyId) {
+    const study = WORKLIST_PATIENTS.find(p => p.id === studyId);
+    if (!study) return;
+
+    activeStudyFile = study.file;
+
+    if (displayStudyId) displayStudyId.textContent = study.id;
+    if (dicomPatientId) dicomPatientId.textContent = `${study.patientName} (${study.mrn})`;
+
+    // Load file
+    loadPresetCase(study.file);
+
+    // Update active button in casePresetButtons if present
+    if (casePresetButtons) {
+      casePresetButtons.querySelectorAll('.case-preset-btn').forEach(b => {
+        if (b.getAttribute('data-file') === study.file) {
+          b.classList.add('active');
+        } else {
+          b.classList.remove('active');
+        }
+      });
+    }
+
+    renderQuickWorklistStrip();
+    renderWorklistTable();
+
+    // Switch to PACS console
+    switchMainView('viewConsole', 'navItemConsole');
+  }
+
+  function renderQuickWorklistStrip() {
+    const strip = document.getElementById('quickWorklistStrip');
+    if (!strip) return;
+
+    strip.innerHTML = WORKLIST_PATIENTS.slice(0, 10).map(p => {
+      const isActive = p.file === activeStudyFile;
+      const dotClass = p.priority === 'stat' ? 'stat' : (p.priority === 'urgent' ? 'urgent' : '');
+      return `
+        <button class="quick-study-chip ${isActive ? 'active' : ''}" data-study-id="${p.id}" type="button" title="${p.patientName} (${p.mrn}) — ${p.indication}">
+          <span class="quick-chip-dot ${dotClass}"></span>
+          <span>${p.patientName.split(',')[0]}</span>
+          <span style="font-family: var(--font-mono); font-size: 10px; opacity: 0.7;">${p.mrn}</span>
+        </button>
+      `;
+    }).join('');
+
+    strip.querySelectorAll('.quick-study-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const studyId = chip.getAttribute('data-study-id');
+        openStudyInPACS(studyId);
+      });
+    });
+  }
+
+  function initWorklist() {
+    renderWorklistTable();
+    renderQuickWorklistStrip();
+
+    const searchInput = document.getElementById('worklistSearchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        currentWorklistSearch = e.target.value.trim();
+        renderWorklistTable();
+      });
+    }
+
+    document.querySelectorAll('.worklist-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.worklist-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentWorklistFilter = tab.getAttribute('data-filter') || 'all';
+        renderWorklistTable();
+      });
+    });
+
+    const btnUpload = document.getElementById('btnWorklistNewUpload');
+    if (btnUpload) {
+      btnUpload.addEventListener('click', () => {
+        switchMainView('viewConsole', 'navItemConsole');
+        if (fileInput) fileInput.click();
+      });
+    }
+
+    const btnTopNew = document.getElementById('btnTopNewAnalysis');
+    if (btnTopNew) {
+      btnTopNew.addEventListener('click', () => {
+        switchMainView('viewConsole', 'navItemConsole');
+        if (fileInput) fileInput.click();
+      });
+    }
+
+    const btnLaunchDash = document.getElementById('btnLaunchFromDash');
+    if (btnLaunchDash) {
+      btnLaunchDash.addEventListener('click', () => {
+        switchMainView('viewConsole', 'navItemConsole');
+      });
+    }
+  }
 
   // Dedicated Heatmap & Calibration Scroll shortcuts
   const navItemHeatmap = document.getElementById('navItemHeatmap');
@@ -2116,5 +2530,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial dashboard load
   updateDashboardTelemetry();
+
+  // --- Deep link intake from Hospital Operations Dashboard ---
+  function checkUrlParamsForTriage() {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const sample = urlParams.get('sample');
+      const patient = urlParams.get('patient');
+      const mrn = urlParams.get('mrn');
+
+      if (patient || mrn) {
+        if (displayStudyId) displayStudyId.textContent = `${mrn || 'CXR-2026'} (${patient || 'Patient'})`;
+        if (dicomPatientId) dicomPatientId.textContent = `${patient || 'PATIENT'} [${mrn || 'ID'}]`;
+      }
+
+      if (sample) {
+        loadPresetCase(sample);
+      }
+    } catch (e) {
+      console.warn('Error reading URL params:', e);
+    }
+  }
+
+  checkUrlParamsForTriage();
 
 });

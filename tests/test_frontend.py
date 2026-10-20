@@ -171,3 +171,21 @@ def test_clinical_evidence_and_verification_components():
     assert "btnSignReport" in js
 
 
+def test_hospital_dashboard_page():
+    """Verify hospital_dashboard.html exists and contains core healthcare components."""
+    base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend"))
+    dash_path = os.path.join(base_dir, "hospital_dashboard.html")
+
+    assert os.path.exists(dash_path), "hospital_dashboard.html must exist"
+
+    with open(dash_path, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    assert "General Hospital" in content
+    assert "Total Patients" in content
+    assert "Available Doctors" in content
+    assert "Occupied Beds" in content
+    assert "Today's Appointments" in content
+    assert "appointmentsTable" in content
+    assert "Doctor Availability" in content
+    assert "Launch CXR Analyzer" in content

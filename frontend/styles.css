@@ -5,76 +5,80 @@
    ========================================================================== */
 
 :root {
-  /* Dark Clinical Theme (#101A2B, #172438, #1D2D42, #56C6B5, #83B7F0) */
-  --bg-app: #101A2B; /* Primary background: deep navy */
-  --bg-shell: #101A2B;
-  --bg-sidebar: #172438; /* Secondary background */
-  --bg-topbar: rgba(23, 36, 56, 0.96);
-  --bg-surface: #1D2D42; /* Card background */
-  --bg-surface-elevated: #22344D;
-  --bg-surface-hover: #263C57;
-  --bg-viewport: #0A111C;
-  --bg-subtle: #172438;
+  /* Hospital Clinical Theme (Navy Blue, White, Teal, and Light Gray) */
+  --bg-app: #f1f5f9; /* Slate-100 clean hospital canvas */
+  --bg-shell: #f1f5f9;
+  --bg-sidebar: #0f233a; /* Deep professional hospital navy */
+  --bg-sidebar-hover: #162f4d;
+  --bg-topbar: #ffffff; /* Clean hospital white navbar */
+  --bg-surface: #ffffff; /* Crisp white card surface */
+  --bg-surface-elevated: #f8fafc; /* Crisp light gray surface */
+  --bg-surface-hover: #f1f5f9;
+  --bg-viewport: #070d18; /* High-contrast dark diagnostic DICOM viewer screen */
+  --bg-subtle: #f8fafc;
 
-  /* Primary Accent: Muted Teal & Secondary Accent: Soft Blue */
-  --color-primary: #56C6B5; /* Muted teal */
-  --color-primary-hover: #45b3a2;
-  --color-primary-dark: #379486;
-  --color-primary-light: #6ed4c4;
-  --color-primary-bg: rgba(86, 198, 181, 0.12);
-  --color-primary-border: rgba(86, 198, 181, 0.35);
+  /* Primary Accent: Healthcare Teal / Ocean Cyan */
+  --color-primary: #0284c7; /* Hospital cyan / teal blue */
+  --color-primary-hover: #0369a1;
+  --color-primary-dark: #075985;
+  --color-primary-light: #38bdf8;
+  --color-primary-bg: rgba(2, 132, 199, 0.08);
+  --color-primary-border: rgba(2, 132, 199, 0.28);
 
-  --color-secondary: #83B7F0; /* Soft blue */
-  --color-secondary-bg: rgba(131, 183, 240, 0.12);
+  /* Secondary Accent: Hospital Teal */
+  --color-secondary: #0d9488; /* Clinical teal */
+  --color-secondary-bg: rgba(13, 148, 136, 0.08);
 
-  /* Subtle Slate Borders */
-  --border-subtle: #34465C; /* Subtle slate */
-  --border-medium: #3E536D;
-  --border-active: #56C6B5;
-  --border-focus: #56C6B5;
+  /* Clean Slate Borders */
+  --border-subtle: #e2e8f0; /* Crisp light slate border */
+  --border-medium: #cbd5e1;
+  --border-active: #0284c7;
+  --border-focus: #0284c7;
 
   /* Clinical Severity Badges & Status */
-  --color-candidate: #E06C75; /* Accessible muted red */
-  --color-candidate-bg: rgba(224, 108, 117, 0.15);
-  --color-candidate-border: rgba(224, 108, 117, 0.35);
-  --color-candidate-bar: #E06C75;
+  --color-candidate: #dc2626; /* High clarity clinical red / rose */
+  --color-candidate-bg: rgba(220, 38, 38, 0.08);
+  --color-candidate-border: rgba(220, 38, 38, 0.25);
+  --color-candidate-bar: #ef4444;
 
-  --color-review: #E5A93C; /* Muted amber */
-  --color-review-bg: rgba(229, 169, 60, 0.15);
-  --color-review-border: rgba(229, 169, 60, 0.35);
-  --color-review-bar: #E5A93C;
+  --color-review: #d97706; /* Clinical amber */
+  --color-review-bg: rgba(217, 119, 6, 0.08);
+  --color-review-border: rgba(217, 119, 6, 0.25);
+  --color-review-bar: #f59e0b;
 
-  --color-normal: #48B098; /* Restrained teal-green */
-  --color-normal-bg: rgba(72, 176, 152, 0.15);
-  --color-normal-border: rgba(72, 176, 152, 0.35);
-  --color-normal-bar: #48B098;
+  --color-normal: #059669; /* Health green / emerald */
+  --color-normal-bg: rgba(5, 150, 105, 0.08);
+  --color-normal-border: rgba(5, 150, 105, 0.25);
+  --color-normal-bar: #10b981;
 
-  --color-unlikely: #8292A6;
-  --color-unlikely-bg: rgba(130, 146, 166, 0.12);
-  --color-unlikely-border: #34465C;
-  --color-unlikely-bar: #5A6D85;
+  --color-unlikely: #64748b;
+  --color-unlikely-bg: rgba(100, 116, 139, 0.08);
+  --color-unlikely-border: #e2e8f0;
+  --color-unlikely-bar: #94a3b8;
 
-  /* High-Contrast Text Hierarchy: Soft White & Cool Grey */
-  --text-primary: #EAF0F7;    /* Soft white */
-  --text-secondary: #AAB8C8;  /* Cool grey */
-  --text-muted: #8292A6;
-  --text-dim: #64778E;
-  --text-inverse: #101A2B;
+  /* High-Contrast Clinical Text Hierarchy */
+  --text-primary: #0f172a; /* Deep slate-900 */
+  --text-secondary: #334155; /* Slate-700 */
+  --text-muted: #64748b; /* Slate-500 */
+  --text-dim: #94a3b8; /* Slate-400 */
+  --text-inverse: #ffffff;
 
   /* Typography */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', Consolas, 'SF Mono', Menlo, Monaco, monospace;
 
-  /* Non-fatiguing Soft Shadows */
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  /* Soft Hospital Card Shadows */
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px rgba(15, 23, 42, 0.02);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
   --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.03);
+  --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 6px 16px -2px rgba(15, 23, 42, 0.03);
+  --shadow-card-hover: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 10px 24px -3px rgba(15, 23, 42, 0.06);
 
   /* Radii */
   --radius-xs: 4px;
   --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
   --radius-full: 9999px;
 
   /* Gentle Transitions */
@@ -87,6 +91,7 @@
   --bg-app: #0b0f17;
   --bg-shell: #090d14;
   --bg-sidebar: #090d14;
+  --bg-sidebar-hover: #121927;
   --bg-topbar: rgba(11, 15, 23, 0.94);
   --bg-surface: #111724;
   --bg-surface-elevated: #161f30;
@@ -100,6 +105,9 @@
   --color-primary-light: #7dd3fc;
   --color-primary-bg: rgba(56, 189, 248, 0.12);
   --color-primary-border: rgba(56, 189, 248, 0.35);
+
+  --color-secondary: #2dd4bf;
+  --color-secondary-bg: rgba(45, 212, 191, 0.12);
 
   --border-subtle: #1e293b;
   --border-medium: #334155;
@@ -135,6 +143,8 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 6px 16px -2px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 10px 24px -3px rgba(0, 0, 0, 0.4);
 }
 
 /* Base Reset & Core Setup */
@@ -200,9 +210,9 @@ body.clinical-body {
    COMPACT SIDEBAR NAVIGATION (CLEAN WHITE / SOFT SLATE)
    ========================================================================== */
 .clinical-sidebar {
-  width: 230px;
+  width: 240px;
   background: var(--bg-sidebar);
-  border-right: 1px solid var(--border-subtle);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -212,7 +222,7 @@ body.clinical-body {
   flex-shrink: 0;
   transition: width var(--transition-normal);
   user-select: none;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 2px 0 8px rgba(15, 23, 42, 0.04);
 }
 
 .clinical-sidebar.collapsed {
@@ -225,27 +235,28 @@ body.clinical-body {
   display: flex;
   align-items: center;
   gap: 12px;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   position: relative;
-  background: var(--bg-sidebar);
+  background: transparent;
 }
 
 .brand-beacon {
-  width: 36px;
-  height: 36px;
-  background: var(--color-primary-bg);
-  border: 1px solid var(--color-primary-border);
+  width: 38px;
+  height: 38px;
+  background: rgba(2, 132, 199, 0.2);
+  border: 1px solid rgba(56, 189, 248, 0.35);
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-primary);
+  color: #38bdf8;
   position: relative;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
 }
 
 .beacon-pulse-ring {
-  display: none; /* Removed neon pulsing for reduced visual fatigue */
+  display: none;
 }
 
 .sidebar-brand-text {
@@ -260,25 +271,25 @@ body.clinical-body {
 }
 
 .brand-name-sup {
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 800;
   letter-spacing: 0.04em;
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 .brand-name-sub {
-  font-size: 10.5px;
-  color: var(--text-muted);
+  font-size: 10px;
+  color: #94a3b8;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
 
 .btn-sidebar-toggle {
   margin-left: auto;
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
   width: 26px;
   height: 26px;
   border-radius: var(--radius-xs);
@@ -290,9 +301,9 @@ body.clinical-body {
 }
 
 .btn-sidebar-toggle:hover {
-  background: var(--bg-surface-hover);
-  color: var(--color-primary);
-  border-color: var(--border-medium);
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.25);
 }
 
 .clinical-sidebar.collapsed .btn-sidebar-toggle svg {
@@ -314,7 +325,7 @@ body.clinical-body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--text-muted);
+  color: #64748b;
   padding: 12px 10px 4px;
 }
 
@@ -329,7 +340,7 @@ body.clinical-body {
   gap: 12px;
   padding: 8.5px 12px;
   border-radius: var(--radius-sm);
-  color: var(--text-secondary);
+  color: #cbd5e1;
   text-decoration: none;
   font-size: 12.5px;
   font-weight: 500;
@@ -344,31 +355,31 @@ body.clinical-body {
 
 .sidebar-nav-item:hover,
 .sidebar-nav-btn:hover {
-  background: var(--bg-surface-hover);
-  color: var(--text-primary);
-  border-color: var(--border-subtle);
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .sidebar-nav-item.active {
-  background: var(--color-primary-bg);
-  color: var(--color-primary-dark);
-  border-color: var(--color-primary-border);
+  background: rgba(2, 132, 199, 0.22);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.4);
   font-weight: 600;
 }
 
 .nav-icon {
   flex-shrink: 0;
-  color: var(--text-muted);
+  color: #94a3b8;
   transition: color var(--transition-fast);
 }
 
 .sidebar-nav-item:hover .nav-icon,
 .sidebar-nav-btn:hover .nav-icon {
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 .sidebar-nav-item.active .nav-icon {
-  color: var(--color-primary);
+  color: #38bdf8;
 }
 
 .nav-label {
@@ -385,7 +396,8 @@ body.clinical-body {
   width: 6px;
   height: 6px;
   border-radius: var(--radius-full);
-  background: var(--color-primary);
+  background: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
 }
 
 .clinical-sidebar.collapsed .nav-live-dot {
@@ -396,8 +408,8 @@ body.clinical-body {
 .sidebar-telemetry-widget {
   padding: 12px 14px;
   margin: 10px;
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-sm);
   display: flex;
   flex-direction: column;
@@ -417,7 +429,7 @@ body.clinical-body {
 .tel-label {
   font-size: 9.5px;
   font-weight: 700;
-  color: var(--text-muted);
+  color: #94a3b8;
   letter-spacing: 0.05em;
 }
 
@@ -429,28 +441,28 @@ body.clinical-body {
   font-weight: 600;
   padding: 2px 7px;
   border-radius: var(--radius-full);
-  background: var(--color-normal-bg);
-  color: var(--color-normal);
-  border: 1px solid var(--color-normal-border);
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
 }
 
 .tel-dot {
   width: 5px;
   height: 5px;
   border-radius: var(--radius-full);
-  background: var(--color-normal-bar);
+  background: #10b981;
 }
 
 .tel-val {
   font-family: var(--font-mono);
   font-size: 11px;
-  color: var(--text-primary);
+  color: #ffffff;
   font-weight: 600;
 }
 
 .telemetry-divider {
   height: 1px;
-  background: var(--border-subtle);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .telemetry-row {
@@ -465,14 +477,14 @@ body.clinical-body {
 
 .tel-sub {
   font-size: 9px;
-  color: var(--text-dim);
+  color: #64748b;
   font-weight: 600;
 }
 
 .tel-sub-val {
   font-family: var(--font-mono);
   font-size: 10.5px;
-  color: var(--text-secondary);
+  color: #cbd5e1;
 }
 
 /* ==========================================================================
@@ -4303,8 +4315,8 @@ body.clinical-body {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--color-primary);
-  color: #101A2B !important;
+  background: linear-gradient(135deg, #0284c7, #075985);
+  color: #ffffff !important;
   font-weight: 700;
   font-size: 0.88rem;
   padding: 0.65rem 1.25rem;
@@ -4312,11 +4324,13 @@ body.clinical-body {
   border: none;
   cursor: pointer;
   text-decoration: none;
-  transition: background 150ms ease;
+  transition: all 150ms ease;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
 }
 
 .btn-cta-launch:hover {
-  background: var(--color-primary-hover);
+  background: linear-gradient(135deg, #0369a1, #0c4a6e);
+  transform: translateY(-1px);
 }
 
 /* Guidelines Search Bar */
@@ -4328,13 +4342,14 @@ body.clinical-body {
 
 .evidence-search-input {
   flex: 1;
-  background: var(--bg-viewport);
+  background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   padding: 0.75rem 1rem;
   color: var(--text-primary);
   font-size: 0.9rem;
   font-family: inherit;
+  box-shadow: var(--shadow-sm);
 }
 
 .evidence-search-input:focus {
@@ -4359,13 +4374,13 @@ body.clinical-body {
 
 .btn-search-cta:hover {
   background: var(--color-primary);
-  color: #101A2B;
+  color: #ffffff;
 }
 
 /* Empty State Box */
 .empty-state-box {
   background: var(--bg-surface);
-  border: 1px dashed var(--border-subtle);
+  border: 1px dashed var(--border-medium);
   border-radius: var(--radius-md);
   padding: 3rem 2rem;
   text-align: center;
@@ -4390,4 +4405,354 @@ body.clinical-body {
   max-width: 480px;
   margin: 0 auto 1.25rem auto;
   line-height: 1.45;
+}
+
+/* ==========================================================================
+   HOSPITAL RADIOLOGY IMAGING WORKLIST & TRIAGE SYSTEM
+   ========================================================================== */
+.worklist-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.worklist-queue-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary-border);
+  letter-spacing: 0.02em;
+}
+
+.worklist-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.worklist-tabs-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  padding: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.worklist-tab {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.worklist-tab:hover {
+  color: var(--text-primary);
+  background: var(--bg-surface-hover);
+}
+
+.worklist-tab.active {
+  background: var(--bg-surface);
+  color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+.worklist-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  min-width: 280px;
+  box-shadow: var(--shadow-sm);
+}
+
+.worklist-search-box svg {
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+
+.worklist-search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 12.5px;
+  color: var(--text-primary);
+  width: 100%;
+}
+
+.worklist-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.worklist-table th {
+  background: var(--bg-surface-elevated);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-medium);
+  white-space: nowrap;
+}
+
+.worklist-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 12.5px;
+  vertical-align: middle;
+}
+
+.worklist-table tbody tr {
+  transition: background var(--transition-fast);
+  cursor: pointer;
+}
+
+.worklist-table tbody tr:hover {
+  background: var(--bg-surface-hover);
+}
+
+.worklist-table tbody tr.active-study {
+  background: var(--color-primary-bg);
+  border-left: 3px solid var(--color-primary);
+}
+
+.patient-cell-hospital {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.patient-avatar-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-primary-border);
+  flex-shrink: 0;
+}
+
+.patient-meta-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.patient-full-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.patient-mrn-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.priority-pill {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-xs);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.priority-pill.stat {
+  background: rgba(220, 38, 38, 0.12);
+  color: #dc2626;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+.priority-pill.urgent {
+  background: rgba(217, 119, 6, 0.12);
+  color: #d97706;
+  border: 1px solid rgba(217, 119, 6, 0.3);
+}
+
+.priority-pill.routine {
+  background: rgba(2, 132, 199, 0.1);
+  color: #0284c7;
+  border: 1px solid rgba(2, 132, 199, 0.25);
+}
+
+.worklist-status-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  display: inline-block;
+}
+
+.worklist-status-badge.unread {
+  background: var(--bg-surface-elevated);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+}
+
+.worklist-status-badge.analyzed {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.btn-open-study {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: var(--radius-xs);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+  border: 1px solid var(--color-primary-border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.btn-open-study:hover {
+  background: var(--color-primary);
+  color: #ffffff;
+}
+
+/* Quick Worklist Selector Strip inside PACS Viewport */
+.quick-worklist-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.quick-worklist-strip::-webkit-scrollbar {
+  height: 4px;
+}
+
+.quick-worklist-strip::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.quick-worklist-strip::-webkit-scrollbar-thumb {
+  background: var(--border-medium);
+  border-radius: 4px;
+}
+
+.quick-study-chip {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.quick-study-chip:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--border-active);
+  color: var(--text-primary);
+}
+
+.quick-study-chip.active {
+  background: var(--color-primary-bg);
+  border-color: var(--color-primary-border);
+  color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.quick-chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.quick-chip-dot.stat {
+  background: #dc2626;
+}
+
+.quick-chip-dot.urgent {
+  background: #d97706;
+}
+
+/* User Profile Badge in Topbar */
+.user-profile-topbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-elevated);
+  cursor: pointer;
+}
+
+.user-profile-topbar:hover {
+  background: var(--bg-surface-hover);
+}
+
+.topbar-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #0284c7, #075985);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topbar-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar-user-name {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.topbar-user-role {
+  font-size: 9.5px;
+  color: var(--text-muted);
 }
